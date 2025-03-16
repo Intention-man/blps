@@ -1,6 +1,6 @@
-package com.example.prac.repository.data;
+package com.example.prac.repository;
 
-import com.example.prac.model.dataEntity.Ticket;
+import com.example.prac.data.model.Ticket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,6 +11,14 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+    @Query("SELECT t FROM Ticket t")
+    List<Ticket> getAllTickets();
+
+    @Query("SELECT t FROM Ticket t WHERE t.departureCity = :departureCity AND t.departureTime > :startTime")
+    List<Ticket> findByDepartureCityAndDepartureTimeAfter(
+            @Param("departureCity") String departureCity,
+            @Param("startTime") LocalDateTime startTime);
+
     @Query("SELECT t FROM Ticket t WHERE t.departureCity = :departureCity AND t.arrivalCity = :arrivalCity AND t.departureTime BETWEEN :startTime AND :endTime")
     List<Ticket> findByDepartureCityAndArrivalCityAndDepartureTimeBetween(
             @Param("departureCity") String departureCity,
@@ -23,7 +31,4 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("departureCity") String departureCity,
             @Param("arrivalCity") String arrivalCity,
             @Param("startTime") LocalDateTime startTime);
-
-    @Query("SELECT t FROM Ticket t")
-    List<Ticket> getAllTickets();
 }

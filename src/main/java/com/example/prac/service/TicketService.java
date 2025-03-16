@@ -1,9 +1,10 @@
-package com.example.prac.service.data;
+package com.example.prac.service;
 
-import com.example.prac.model.dataEntity.City;
-import com.example.prac.model.dataEntity.Ticket;
-import com.example.prac.repository.data.CityRepository;
-import com.example.prac.repository.data.TicketRepository;
+import com.example.prac.data.model.Airline;
+import com.example.prac.data.model.City;
+import com.example.prac.data.model.Ticket;
+import com.example.prac.repository.AirlineRepository;
+import com.example.prac.repository.TicketRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +17,28 @@ import java.util.Random;
 @AllArgsConstructor
 public class TicketService {
     private TicketRepository ticketRepository;
-    private CityRepository cityRepository;
+    private CityService cityService;
+    private AirlineRepository airlineRepository;
 
     public List<Ticket> generateAndSaveRandomTickets(int count) {
         List<Ticket> tickets = new ArrayList<>();
         Random random = new Random();
 
-        List<City> cities = cityRepository.findAll();
+        List<City> cities = cityService.getAllCities();
         if (cities.isEmpty()) {
-            System.out.println("No cities found in the database.  Add some cities first!");
+            System.out.println("No cities found in the database");
             return new ArrayList<>();
         }
 
-        String[] airlines = {"United", "Delta", "British Airways", "Air France", "Japan Airlines", "Qantas", "Emirates"};
+        List<Airline> airlines = airlineRepository.findAll();
+        if (airlines.isEmpty()) {
+            System.out.println("No airlines found in the database");
+            return new ArrayList<>();
+        }
 
         for (int i = 0; i < count; i++) {
+            Airline airline = airlines.get(random.nextInt(airlines.size()));
+
             City departureCity = cities.get(random.nextInt(cities.size()));
             City arrivalCity = cities.get(random.nextInt(cities.size()));
 
@@ -38,17 +46,18 @@ public class TicketService {
                 arrivalCity = cities.get(random.nextInt(cities.size()));
             }
 
-            LocalDateTime departureTime = LocalDateTime.now().plusDays(random.nextInt(30)).plusHours(random.nextInt(24)); // Up to 30 days in the future
-            LocalDateTime arrivalTime = departureTime.plusHours(random.nextInt(10) + 1); // Flight duration up to 10 hours
+            LocalDateTime departureTime = LocalDateTime.now().plusDays(random.nextInt(30)).plusHours(random.nextInt(24));
+            LocalDateTime arrivalTime = departureTime.plusHours(random.nextInt(10) + 1);
+
 
             Ticket ticket = Ticket.builder()
-                    .airline(airlines[random.nextInt(airlines.length)])
-                    .flightNumber(String.format("%s%03d", airlines[random.nextInt(airlines.length)].substring(0, 2).toUpperCase(), random.nextInt(999) + 1)) // Example: UA123
-                    .departureCity(departureCity.getName())
-                    .departureTime(departureTime)
-                    .arrivalCity(arrivalCity.getName())
-                    .arrivalTime(arrivalTime)
-                    .price(random.nextDouble() * 500 + 100)
+                    .airline(airline)
+                    .flightNumber(String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(999) + 1))
+                    .departureCity(departureCity)
+                    .departureDatetime(departureTime)
+                    .arrivalCity(arrivalCity)
+                    .arrivalDatetime(arrivalTime)
+                    .price(random.nextInt() * 500 + 100)
                     .build();
             tickets.add(ticket);
         }
@@ -66,9 +75,5 @@ public class TicketService {
 
     public List<Ticket> getAllTickets() {
         return ticketRepository.findAll();
-    }
-
-    public List<City> getAllCities() {
-        return cityRepository.findAll();
     }
 }

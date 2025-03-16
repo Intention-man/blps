@@ -1,17 +1,16 @@
-package com.example.prac.DTO.data;
+package com.example.prac.data.DTO.response;
 
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class TicketDTO {
     private Long id;
     private String airline;
+    private String serviceClass;
     private String flightNumber;
     private String departureCity;
-    private LocalDateTime departureTime;
+    private String departureDatetime;
     private String arrivalCity;
-    private LocalDateTime arrivalTime;
-    private Double price;
+    private String arrivalDatetime;
+    private int price;
 }

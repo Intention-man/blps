@@ -1,6 +1,6 @@
-package com.example.prac.repository.data;
+package com.example.prac.repository;
 
-import com.example.prac.model.dataEntity.City;
+import com.example.prac.data.model.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

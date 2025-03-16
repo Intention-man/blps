@@ -1,8 +1,8 @@
 package com.example.prac.mappers;
 
-import com.example.prac.DTO.data.TicketDTO;
-import com.example.prac.model.dataEntity.Ticket;
-import com.example.prac.service.data.CityService;
+import com.example.prac.data.DTO.response.TicketDTO;
+import com.example.prac.data.model.Ticket;
+import com.example.prac.service.CityService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,6 @@ public class TicketMapper implements Mapper<Ticket, TicketDTO> {
 
         TicketDTO ticketDTO = modelMapper.map(ticket, TicketDTO.class);
 
-        // Use CityMapper to get the city name
         ticketDTO.setDepartureCity(cityMapper.mapToName(ticket.getDepartureCity()));
         ticketDTO.setArrivalCity(cityMapper.mapToName(ticket.getArrivalCity()));
 

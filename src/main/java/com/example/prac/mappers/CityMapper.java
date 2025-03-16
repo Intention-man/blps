@@ -1,8 +1,8 @@
 package com.example.prac.mappers;
 
 
-import com.example.prac.DTO.data.CityDTO;
-import com.example.prac.model.dataEntity.City;
+import com.example.prac.data.DTO.CityDTO;
+import com.example.prac.data.model.City;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 

@@ -1,12 +1,15 @@
 package com.example.prac.controllers;
 
-import com.example.prac.DTO.data.CityDTO;
-import com.example.prac.DTO.data.ComplexRouteSearchRequestDTO;
-import com.example.prac.DTO.data.TicketSearchResponseDTO;
+import com.example.prac.data.DTO.CityDTO;
+import com.example.prac.data.DTO.request.ComplexRouteLeg;
+import com.example.prac.data.DTO.request.ComplexRouteSearchRequest;
+import com.example.prac.data.DTO.request.SimpleRouteSearchRequest;
+import com.example.prac.data.DTO.response.TicketSearchResponse;
+import com.example.prac.data.model.City;
 import com.example.prac.mappers.CityMapper;
-import com.example.prac.model.dataEntity.City;
-import com.example.prac.service.data.TicketSearchService;
-import com.example.prac.service.data.TicketService;
+import com.example.prac.service.CityService;
+import com.example.prac.service.TicketSearchService;
+import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +24,18 @@ import java.util.stream.Collectors;
 public class TicketController {
     private TicketSearchService ticketSearchService;
     private TicketService ticketService;
+    private CityService cityService;
     private CityMapper cityMapper;
 
-    @PostMapping("/search")
-    public ResponseEntity<TicketSearchResponseDTO> searchTickets(@RequestBody ComplexRouteSearchRequestDTO searchRequestDTO) {
-        TicketSearchResponseDTO results = ticketSearchService.searchTickets(searchRequestDTO);
+    @GetMapping("/search_simple")
+    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleRouteSearchRequest simpleRouteSearchRequest) {
+        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleRouteSearchRequest);
+        return new ResponseEntity<>(results, HttpStatus.OK);
+    }
+
+    @GetMapping("/search_simple")
+    public ResponseEntity<TicketSearchResponse> searchComplexRoutes(@RequestBody ComplexRouteSearchRequest complexRouteSearchRequest) {
+        TicketSearchResponse results = ticketSearchService.searchComplexRoutes(complexRouteSearchRequest);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
@@ -40,13 +50,13 @@ public class TicketController {
         City city = City.builder()
                 .name(cityDTO.getName())
                 .build();
-        ticketService.getAllCities().add(city);
+        cityService.getAllCities().add(city);
         return new ResponseEntity<>("City created", HttpStatus.CREATED);
     }
 
     @GetMapping("/cities")
     public ResponseEntity<List<CityDTO>> getAllCities() {
-        List<CityDTO> cities = ticketService.getAllCities().stream().map(
+        List<CityDTO> cities = cityService.getAllCities().stream().map(
                 city -> cityMapper.mapTo(city)
         ).collect(Collectors.toList());
         return new ResponseEntity<>(cities, HttpStatus.OK);

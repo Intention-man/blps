@@ -1,9 +1,11 @@
-package com.example.prac.service.data;
+package com.example.prac.service;
 
-import com.example.prac.model.dataEntity.City;
-import com.example.prac.repository.data.CityRepository;
+import com.example.prac.data.model.City;
+import com.example.prac.repository.CityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -18,5 +20,9 @@ public class CityService {
             city = cityRepository.save(city);
         }
         return city;
+    }
+
+    public List<City> getAllCities() {
+        return cityRepository.findAll();
     }
 }
