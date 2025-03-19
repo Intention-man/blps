@@ -1,17 +1,16 @@
 package com.example.prac.service;
 
-import com.example.prac.data.DTO.request.ComplexRouteSearchRequest;
-import com.example.prac.data.DTO.request.SimpleRouteSearchRequest;
-import com.example.prac.data.DTO.response.RouteVariantDTO;
-import com.example.prac.data.DTO.response.TicketDTO;
-import com.example.prac.data.DTO.response.TicketSearchResponse;
+import com.example.prac.data.DTO.complex.req.ComplexRouteSearchRequest;
+import com.example.prac.data.DTO.simple.req.SimpleRouteSearchRequestDTO;
+import com.example.prac.data.DTO.simple.res.RouteVariantDTO;
+import com.example.prac.data.DTO.TicketDTO;
+import com.example.prac.data.DTO.simple.res.TicketSearchResponse;
 import com.example.prac.data.model.Ticket;
 import com.example.prac.mappers.TicketMapper;
 import com.example.prac.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,16 +20,26 @@ public class TicketSearchService {
     private TicketMapper ticketMapper;
     private TicketRepository ticketRepository;
 
-    public TicketSearchResponse searchSimpleRoutes(SimpleRouteSearchRequest simpleRouteSearchRequest) {
-        List<RouteVariantDTO> routeOptions = findRouteVariants(simpleRouteSearchRequest);
+    //NOTE пока думаю сделать поиск в ширину. По сути все города (узлы) и перелеты между ними (ребра) можно представить как граф.
+    // Сначала ищем билеты-кандидаты на первый полет в маршруте. Смотрим сколько есть таких,
+    // которые сразу же нас ведут к цели при соблюдении всех условий (цена, класс, даты, время).
+    // Если нашли N штук - заканчиваем поиск. Если нет, то ищем для каждого первого в маршруте билета второй билет в маршруте и т д.
+    // Ясно что надо выбрать относительно небольшое N, сделать мало возможных городов
+    // и наверное сделать лимит на поиск в ширину (ex: не более 4 билетов в перелете между A и B)
+
+    public TicketSearchResponse searchSimpleRoutes(SimpleRouteSearchRequestDTO simpleRouteSearchRequestDTO) {
+        List<RouteVariantDTO> routeOptions = findRouteVariants(simpleRouteSearchRequestDTO);
         TicketSearchResponse ticketSearchResponse = new TicketSearchResponse();
         ticketSearchResponse.setRouteOptions(routeOptions);
         return ticketSearchResponse;
     }
 
-    private List<RouteVariantDTO> findRouteVariants(SimpleRouteSearchRequest simpleRouteSearchRequest) {
+    private List<RouteVariantDTO> findRouteVariants(SimpleRouteSearchRequestDTO req) {
         for (int i = 0; i < 3; i++) {
             RouteVariantDTO routeOption = new RouteVariantDTO();
+            ticketRepository.findTicketsByDepartureData(
+                    req.getServiceClass(), req.getDepartureCity(), req.getDepartureDateStart(),
+                    req.getDepartureDateFinish(), req.getDepartureTimeStart(), req.getDepartureTimeFinish())
 
 
         }

@@ -1,10 +1,9 @@
 package com.example.prac.controllers;
 
 import com.example.prac.data.DTO.CityDTO;
-import com.example.prac.data.DTO.request.ComplexRouteLeg;
-import com.example.prac.data.DTO.request.ComplexRouteSearchRequest;
-import com.example.prac.data.DTO.request.SimpleRouteSearchRequest;
-import com.example.prac.data.DTO.response.TicketSearchResponse;
+import com.example.prac.data.DTO.complex.req.ComplexRouteSearchRequest;
+import com.example.prac.data.DTO.simple.req.SimpleRouteSearchRequestDTO;
+import com.example.prac.data.DTO.simple.res.TicketSearchResponse;
 import com.example.prac.data.model.City;
 import com.example.prac.mappers.CityMapper;
 import com.example.prac.service.CityService;
@@ -28,8 +27,8 @@ public class TicketController {
     private CityMapper cityMapper;
 
     @GetMapping("/search_simple")
-    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleRouteSearchRequest simpleRouteSearchRequest) {
-        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleRouteSearchRequest);
+    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleRouteSearchRequestDTO simpleRouteSearchRequestDTO) {
+        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleRouteSearchRequestDTO);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 

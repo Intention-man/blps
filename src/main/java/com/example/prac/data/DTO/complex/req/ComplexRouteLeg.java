@@ -1,4 +1,4 @@
-package com.example.prac.data.DTO.request;
+package com.example.prac.data.DTO.complex.req;
 
 import lombok.Data;
 

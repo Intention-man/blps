@@ -1,6 +1,9 @@
-package com.example.prac.data.DTO.response;
+package com.example.prac.data.DTO;
 
 import lombok.Data;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class TicketDTO {
@@ -9,8 +12,10 @@ public class TicketDTO {
     private String serviceClass;
     private String flightNumber;
     private String departureCity;
-    private String departureDatetime;
+    private LocalDate departureDate;
+    private LocalTime departureTime;
     private String arrivalCity;
-    private String arrivalDatetime;
+    private LocalDate arrivalDate;
+    private LocalTime arrivalTime;
     private int price;
 }

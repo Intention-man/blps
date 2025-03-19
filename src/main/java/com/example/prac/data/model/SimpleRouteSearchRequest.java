@@ -1,25 +1,31 @@
-package com.example.prac.data.DTO.request;
+package com.example.prac.data.model;
 
-import lombok.Data;
+
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SimpleRouteSearchRequest {
+    private Long id;
     private Integer passengerCount;
-    private String serviceClass;
+    private ServiceClass serviceClass;
     private int maxPrice;
     private int maxTravelHours;
     private int numberOfTransfers;
-    private List<String> availableAirlines;
-    private String departureCity;
+    private List<Airline> availableAirlines;
+    private City departureCity;
     private LocalDate departureDateStart;
     private LocalDate departureDateFinish;
     private LocalTime departureTimeStart;
     private LocalTime departureTimeFinish;
-    private String arrivalCity;
+    private City arrivalCity;
     private LocalDate arrivalDateStart;
     private LocalDate arrivalDateFinish;
     private LocalTime arrivalTimeStart;

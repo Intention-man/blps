@@ -3,10 +3,11 @@ package com.example.prac.data.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "aviasales_tickets") // Updated table name
+@Table(name = "aviasales_tickets")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,18 +29,24 @@ public class Ticket {
     private String flightNumber;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(name = "departure_city_id", nullable = false)
     private City departureCity;
 
-    @Column(name = "departure_datetime", nullable = false)
-    private LocalDateTime departureDatetime;
+    @Column(name = "departure_date", nullable = false)
+    private LocalDate departureDate;
+
+    @Column(name = "departure_time", nullable = false)
+    private LocalTime departureTime;
 
     @ManyToOne
-    @JoinColumn(name = "city_id", nullable = false)
+    @JoinColumn(name = "arrival_city_id", nullable = false)
     private City arrivalCity;
 
-    @Column(name = "arrival_datetime", nullable = false)
-    private LocalDateTime arrivalDatetime;
+    @Column(name = "arrival_date", nullable = false)
+    private LocalDate arrivalDate;
+
+    @Column(name = "arrival_time", nullable = false)
+    private LocalTime arrivalTime;
 
     @Column(name = "price", nullable = false)
     private Integer price;

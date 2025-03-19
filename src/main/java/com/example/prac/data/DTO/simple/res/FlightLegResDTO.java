@@ -1,5 +1,6 @@
-package com.example.prac.data.DTO.response;
+package com.example.prac.data.DTO.simple.res;
 
+import com.example.prac.data.DTO.TicketDTO;
 import lombok.Data;
 
 import java.util.List;
