@@ -3,13 +3,14 @@ package com.example.prac.data.model;
 
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,19 +18,21 @@ import java.util.List;
 @Builder
 public class SimpleTravelSearchRequest {
     private Long id;
-    private Integer passengerCount;
     private ServiceClass serviceClass;
+    private Integer passengerCount;
     private int maxPrice;
     private int maxTravelHours;
+    @Min(value = 1)
     @Max(value = 3)
     private int numberOfTransfers;
     private List<Airline> availableAirlines;
     private City departureCity;
+    private City arrivalCity;
+
     private LocalDate departureDateStart;
     private LocalDate departureDateFinish;
     private LocalTime departureTimeStart;
     private LocalTime departureTimeFinish;
-    private City arrivalCity;
     private LocalDate arrivalDateStart;
     private LocalDate arrivalDateFinish;
     private LocalTime arrivalTimeStart;

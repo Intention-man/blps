@@ -5,7 +5,6 @@ import lombok.*;
 
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,5 +15,6 @@ public class Route {
     private City departureCity;
     private City arrivalCity;
     private double totalHours;
+    private int totalPrice;
     private List<Ticket> tickets;
 }

@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Generate Tickets",
+    "request": {
+      "method": "POST",
+      "url": "{{base_url}}/api/tickets/generate",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "name": "Get All Tickets",
+    "request": {
+      "method": "GET",
+      "url": "{{base_url}}/api/tickets/all",
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  },
+  {
+    "name": "Search Simple Routes",
+    "request": {
+      "method": "GET",
+      "url": "{{base_url}}/api/tickets/search_routes",
+      "body": {
+        "mode": "raw",
+        "raw": "{\n    \"passengerCount\": 2,\n    \"serviceClass\": \"E\",\n    \"maxPrice\": 1000,\n    \"maxTravelHours\": 10,\n    \"numberOfTransfers\": 1,\n    \"availableAirlines\": [\"Aeroflot\", \"Delta Air Lines\", \"Emirates\"],\n    \"departureCity\": \"Moscow\",\n    \"arrivalCity\": \"New York\",\n    \"departureDateStart\": \"2025-03-23\",\n    \"departureDateFinish\": \"2025-03-31\",\n    \"departureTimeStart\": \"08:00\",\n    \"departureTimeFinish\": \"10:00\",\n    \"arrivalDateStart\": \"2025-03-23\",\n    \"arrivalDateFinish\": \"2025-03-31\",\n    \"arrivalTimeStart\": \"12:00\",\n    \"arrivalTimeFinish\": \"14:00\",\n    \"backDepartureDateStart\": \"2025-04-01\",\n    \"backDepartureDateFinish\": \"2025-04-10\",\n    \"backDepartureTimeStart\": \"08:00\",\n    \"backDepartureTimeFinish\": \"10:00\",\n    \"backArrivalDateStart\": \"2025-04-01\",\n    \"backArrivalDateFinish\": \"2025-04-10\",\n    \"backArrivalTimeStart\": \"12:00\",\n    \"backArrivalTimeFinish\": \"14:00\"\n}"
+      },
+      "headers": {
+        "Content-Type": "application/json"
+      }
+    }
+  }
+]

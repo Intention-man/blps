@@ -56,5 +56,5 @@ public class Ticket {
     private LocalTime arrivalTime;
 
     @Column(name = "hours", nullable = false)
-    private int hours;
+    private double hours;
 }

@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -45,32 +46,35 @@ public class TicketService {
 
         for (Airline airline : airlines) {
             for (City departureCity : cities) {
-                for (City arrivalCity : cities) {
-                    if (!departureCity.equals(arrivalCity)) {
-                        ServiceClass serviceClass = ServiceClass.values()[random.nextInt(ServiceClass.values().length)];
-                        String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
-                        LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(30));
-                        LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
-                        LocalDate arrivalDate = departureDate.plusDays(random.nextInt(1));
-                        LocalTime arrivalTime = departureTime.plusHours(random.nextInt(10) + 1);
-                        int price = random.nextInt(400) + 100;
-                        int availableSeats = random.nextInt(3) + 1;
+                List<City> randomArrivalCities = new ArrayList<>(cities);
+                randomArrivalCities.remove(departureCity);
+                Collections.shuffle(randomArrivalCities);
+                randomArrivalCities = randomArrivalCities.subList(0, randomArrivalCities.size() / 2);
 
-                        Ticket ticket = Ticket.builder()
-                                .airline(airline)
-                                .serviceClass(serviceClass)
-                                .flightNumber(flightNumber)
-                                .departureCity(departureCity)
-                                .departureDate(departureDate)
-                                .departureTime(departureTime)
-                                .arrivalCity(arrivalCity)
-                                .arrivalDate(arrivalDate)
-                                .arrivalTime(arrivalTime)
-                                .price(price)
-                                .availableSeats(availableSeats)
-                                .build();
-                        tickets.add(ticket);
-                    }
+                for (City arrivalCity : randomArrivalCities) {
+                    ServiceClass serviceClass = ServiceClass.values()[random.nextInt(ServiceClass.values().length)];
+                    String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
+                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(30));
+                    LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
+                    LocalDate arrivalDate = departureDate.plusDays(random.nextInt(1));
+                    LocalTime arrivalTime = departureTime.plusHours(random.nextInt(10) + 1);
+                    int price = random.nextInt(400) + 100;
+                    int availableSeats = random.nextInt(3) + 1;
+
+                    Ticket ticket = Ticket.builder()
+                            .airline(airline)
+                            .serviceClass(serviceClass)
+                            .flightNumber(flightNumber)
+                            .departureCity(departureCity)
+                            .departureDate(departureDate)
+                            .departureTime(departureTime)
+                            .arrivalCity(arrivalCity)
+                            .arrivalDate(arrivalDate)
+                            .arrivalTime(arrivalTime)
+                            .price(price)
+                            .availableSeats(availableSeats)
+                            .build();
+                    tickets.add(ticket);
                 }
             }
         }

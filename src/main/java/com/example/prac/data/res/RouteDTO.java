@@ -9,5 +9,6 @@ public class RouteDTO {
     private String departureCity;
     private String arrivalCity;
     private int totalHours;
+    private double totalPrice;
     private List<TicketDTO> tickets;
 }
