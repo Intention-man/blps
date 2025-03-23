@@ -16,6 +16,7 @@ import java.time.LocalTime;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ticket_id", nullable = false)
     private Long ticketId;
 
     @ManyToOne
@@ -24,6 +25,12 @@ public class Ticket {
 
     @Column(name = "service_class", nullable = false)
     private ServiceClass serviceClass;
+
+    @Column(name = "price", nullable = false)
+    private Integer price;
+
+    @Column(name = "available_seats", nullable = false)
+    private Integer availableSeats;
 
     @Column(name = "flight_number", nullable = false)
     private String flightNumber;
@@ -48,6 +55,6 @@ public class Ticket {
     @Column(name = "arrival_time", nullable = false)
     private LocalTime arrivalTime;
 
-    @Column(name = "price", nullable = false)
-    private Integer price;
+    @Column(name = "hours", nullable = false)
+    private int hours;
 }

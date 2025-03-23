@@ -1,9 +1,9 @@
 package com.example.prac.controllers;
 
-import com.example.prac.data.DTO.CityDTO;
-import com.example.prac.data.DTO.complex.req.ComplexRouteSearchRequest;
-import com.example.prac.data.DTO.simple.req.SimpleRouteSearchRequestDTO;
-import com.example.prac.data.DTO.simple.res.TicketSearchResponse;
+import com.example.prac.data.res.CityDTO;
+import com.example.prac.data.res.TicketDTO;
+import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.res.TicketSearchResponse;
 import com.example.prac.data.model.City;
 import com.example.prac.mappers.CityMapper;
 import com.example.prac.service.CityService;
@@ -26,22 +26,21 @@ public class TicketController {
     private CityService cityService;
     private CityMapper cityMapper;
 
-    @GetMapping("/search_simple")
-    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleRouteSearchRequestDTO simpleRouteSearchRequestDTO) {
-        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleRouteSearchRequestDTO);
-        return new ResponseEntity<>(results, HttpStatus.OK);
-    }
-
-    @GetMapping("/search_simple")
-    public ResponseEntity<TicketSearchResponse> searchComplexRoutes(@RequestBody ComplexRouteSearchRequest complexRouteSearchRequest) {
-        TicketSearchResponse results = ticketSearchService.searchComplexRoutes(complexRouteSearchRequest);
-        return new ResponseEntity<>(results, HttpStatus.OK);
-    }
-
     @PostMapping("/generate")
-    public ResponseEntity<String> generateTickets(@RequestParam(defaultValue = "100") int count) {
-        ticketService.generateAndSaveRandomTickets(count);
-        return new ResponseEntity<>("Generated " + count + " tickets.", HttpStatus.CREATED);
+    public ResponseEntity<String> generateTickets() {
+        ticketService.generateAndSaveTickets();
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<TicketDTO>> getTickets() {
+        return new ResponseEntity<>(ticketService.getAllTicketDTOs(), HttpStatus.OK);
+    }
+
+    @GetMapping("/search_simple")
+    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
+        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleTravelSearchRequestDTO);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @PostMapping("/cities")

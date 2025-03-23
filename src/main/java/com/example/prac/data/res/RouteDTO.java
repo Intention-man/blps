@@ -1,14 +1,13 @@
-package com.example.prac.data.DTO.simple.res;
+package com.example.prac.data.res;
 
-import com.example.prac.data.DTO.TicketDTO;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class FlightLegResDTO {
+public class RouteDTO {
     private String departureCity;
     private String arrivalCity;
-    private int totalTime;
+    private int totalHours;
     private List<TicketDTO> tickets;
 }

@@ -1,39 +1,30 @@
 package com.example.prac.mappers;
 
-import com.example.prac.data.DTO.simple.req.SimpleRouteSearchRequestDTO;
-import com.example.prac.data.model.Airline;
-import com.example.prac.data.model.City;
-import com.example.prac.data.model.ServiceClass;
-import com.example.prac.data.model.SimpleRouteSearchRequest;
+import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 @AllArgsConstructor
-public class SimpleRouteSearchRequestMapper implements Mapper<SimpleRouteSearchRequest, SimpleRouteSearchRequestDTO>{
+public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearchRequest, SimpleTravelSearchRequestDTO>{
 
     private final ModelMapper modelMapper;
     private final CityService cityService;
     private final AirlineService airlineService;
 
     @Override
-    public SimpleRouteSearchRequestDTO mapTo(SimpleRouteSearchRequest req) {
-        return modelMapper.map(req, SimpleRouteSearchRequestDTO.class);
+    public SimpleTravelSearchRequestDTO mapTo(SimpleTravelSearchRequest req) {
+        return modelMapper.map(req, SimpleTravelSearchRequestDTO.class);
     }
 
     @Override
-    public SimpleRouteSearchRequest mapFrom(SimpleRouteSearchRequestDTO reqDTO) {
-        return modelMapper.map(reqDTO, SimpleRouteSearchRequest.class);
+    public SimpleTravelSearchRequest mapFrom(SimpleTravelSearchRequestDTO reqDTO) {
+        return modelMapper.map(reqDTO, SimpleTravelSearchRequest.class);
     }
-
 
 //    public SimpleRouteSearchRequest mapToEntity(SimpleRouteSearchRequest request) {
 //        ServiceClass serviceClass = ServiceClass.valueOf(request.getServiceClass());

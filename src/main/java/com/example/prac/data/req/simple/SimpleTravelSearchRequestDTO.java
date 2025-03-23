@@ -1,4 +1,4 @@
-package com.example.prac.data.DTO.simple.req;
+package com.example.prac.data.req.simple;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class SimpleRouteSearchRequestDTO {
+public class SimpleTravelSearchRequestDTO {
     private Integer passengerCount;
     private String serviceClass;
     private int maxPrice;

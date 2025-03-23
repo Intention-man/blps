@@ -13,19 +13,13 @@ import java.util.Optional;
 public class CityService {
     private final CityRepository cityRepository;
 
-    public City findByName(String name) {
-        return cityRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("City not found: " + name));
-    }
-
     public City findOrCreateCity(String cityName) {
-        Optional<City> city = cityRepository.findByName(cityName);
-        if (city == null) {
-            city = new City();
-            city.setName(cityName);
-            city = cityRepository.save(city);
-        }
-        return city;
+        return cityRepository.findByName(cityName)
+                .orElseGet(() -> {
+                    City newCity = new City();
+                    newCity.setName(cityName);
+                    return cityRepository.save(newCity);
+                });
     }
 
     public List<City> getAllCities() {

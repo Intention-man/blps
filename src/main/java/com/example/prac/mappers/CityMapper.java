@@ -1,18 +1,16 @@
 package com.example.prac.mappers;
 
 
-import com.example.prac.data.DTO.CityDTO;
+import com.example.prac.data.res.CityDTO;
 import com.example.prac.data.model.City;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class CityMapper implements Mapper<City, CityDTO> {
     private final ModelMapper modelMapper;
-
-    public CityMapper() {
-        this.modelMapper = new ModelMapper();
-    }
 
     @Override
     public CityDTO mapTo(City city) {

@@ -1,4 +1,4 @@
-package com.example.prac.data.DTO;
+package com.example.prac.data.res;
 
 import lombok.Data;
 
@@ -10,6 +10,8 @@ public class TicketDTO {
     private Long id;
     private String airline;
     private String serviceClass;
+    private int price;
+    private int availableSeats;
     private String flightNumber;
     private String departureCity;
     private LocalDate departureDate;
@@ -17,5 +19,4 @@ public class TicketDTO {
     private String arrivalCity;
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
-    private int price;
 }

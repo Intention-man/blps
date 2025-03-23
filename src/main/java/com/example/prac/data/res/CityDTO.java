@@ -1,4 +1,4 @@
-package com.example.prac.data.DTO;
+package com.example.prac.data.res;
 
 import lombok.Data;
 
