@@ -1,7 +1,6 @@
 package com.example.prac.data.model;
 
 
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -21,7 +20,7 @@ public class SimpleTravelSearchRequest {
     private ServiceClass serviceClass;
     private Integer passengerCount;
     private int maxPrice;
-    private int maxTravelHours;
+    private int maxTravelTime;
     @Min(value = 1)
     @Max(value = 3)
     private int numberOfTransfers;

@@ -3,6 +3,7 @@ package com.example.prac.data.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -16,5 +17,6 @@ public class Route {
     private City arrivalCity;
     private double totalHours;
     private int totalPrice;
+    private LocalDateTime maxFinishDatetime;
     private List<Ticket> tickets;
 }

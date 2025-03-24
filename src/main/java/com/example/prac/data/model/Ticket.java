@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -24,6 +25,7 @@ public class Ticket {
     private Airline airline;
 
     @Column(name = "service_class", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ServiceClass serviceClass;
 
     @Column(name = "price", nullable = false)
@@ -45,6 +47,9 @@ public class Ticket {
     @Column(name = "departure_time", nullable = false)
     private LocalTime departureTime;
 
+    @Column(name = "departure_date_time", nullable = false)
+    private LocalDateTime departureDateTime;
+
     @ManyToOne
     @JoinColumn(name = "arrival_city_id", nullable = false)
     private City arrivalCity;
@@ -54,6 +59,9 @@ public class Ticket {
 
     @Column(name = "arrival_time", nullable = false)
     private LocalTime arrivalTime;
+
+    @Column(name = "arrival_date_time", nullable = false)
+    private LocalDateTime arrivalDateTime;
 
     @Column(name = "hours", nullable = false)
     private double hours;

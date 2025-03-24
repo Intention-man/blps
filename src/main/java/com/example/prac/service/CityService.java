@@ -13,6 +13,11 @@ import java.util.Optional;
 public class CityService {
     private final CityRepository cityRepository;
 
+    public City findByName(String cityName) {
+        Optional<City> city = cityRepository.findByName(cityName);
+        return city.orElseThrow();
+    }
+
     public City findOrCreateCity(String cityName) {
         return cityRepository.findByName(cityName)
                 .orElseGet(() -> {

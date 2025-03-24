@@ -30,11 +30,23 @@ spring:
     init:
       mode: always
 
+
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        type: debug
+
 logging:
   level:
     org:
       hibernate:
-        type: debug
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
 
 server:
   port: 18123

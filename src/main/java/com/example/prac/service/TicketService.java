@@ -1,10 +1,10 @@
 package com.example.prac.service;
 
-import com.example.prac.data.res.TicketDTO;
 import com.example.prac.data.model.Airline;
 import com.example.prac.data.model.City;
 import com.example.prac.data.model.ServiceClass;
 import com.example.prac.data.model.Ticket;
+import com.example.prac.data.res.TicketDTO;
 import com.example.prac.mappers.TicketMapper;
 import com.example.prac.repository.AirlineRepository;
 import com.example.prac.repository.TicketRepository;
@@ -46,18 +46,22 @@ public class TicketService {
 
         for (Airline airline : airlines) {
             for (City departureCity : cities) {
-                List<City> randomArrivalCities = new ArrayList<>(cities);
-                randomArrivalCities.remove(departureCity);
-                Collections.shuffle(randomArrivalCities);
-                randomArrivalCities = randomArrivalCities.subList(0, randomArrivalCities.size() / 2);
-
-                for (City arrivalCity : randomArrivalCities) {
+                List<City> otherCities = new ArrayList<>(cities);
+                otherCities.remove(departureCity);
+                for (City arrivalCity : otherCities) {
                     ServiceClass serviceClass = ServiceClass.values()[random.nextInt(ServiceClass.values().length)];
                     String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
-                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(30));
+
+                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(2));
                     LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
-                    LocalDate arrivalDate = departureDate.plusDays(random.nextInt(1));
-                    LocalTime arrivalTime = departureTime.plusHours(random.nextInt(10) + 1);
+                    LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
+
+                    LocalDateTime arrivalDateTime = departureDateTime
+                            .plusHours(1 + random.nextInt(10))
+                            .plusMinutes(random.nextInt(60));
+                    LocalDate arrivalDate = arrivalDateTime.toLocalDate();
+                    LocalTime arrivalTime = arrivalDateTime.toLocalTime();
+
                     int price = random.nextInt(400) + 100;
                     int availableSeats = random.nextInt(3) + 1;
 
@@ -68,12 +72,16 @@ public class TicketService {
                             .departureCity(departureCity)
                             .departureDate(departureDate)
                             .departureTime(departureTime)
+                            .departureDateTime(departureDateTime)
                             .arrivalCity(arrivalCity)
                             .arrivalDate(arrivalDate)
                             .arrivalTime(arrivalTime)
+                            .arrivalDateTime(arrivalDateTime)
                             .price(price)
                             .availableSeats(availableSeats)
                             .build();
+                    ticket.setHours(calculateTravelTimeInHours(ticket));
+
                     tickets.add(ticket);
                 }
             }
@@ -89,10 +97,10 @@ public class TicketService {
     }
 
     public double calculateTravelTimeInHours(Ticket ticket) {
-        LocalDateTime departureDateTime = LocalDateTime.of(ticket.getDepartureDate(), ticket.getDepartureTime());
-        LocalDateTime arrivalDateTime = LocalDateTime.of(ticket.getArrivalDate(), ticket.getArrivalTime());
+        return java.time.Duration.between(ticket.getDepartureDateTime(), ticket.getArrivalDateTime()).toMinutes() / 60.0;
+    }
 
-        long minutes = java.time.Duration.between(departureDateTime, arrivalDateTime).toMinutes();
-        return minutes / 60.0;
+    public double calcTransferDurationInHours(Ticket ticket1, Ticket ticket2) {
+        return java.time.Duration.between(ticket1.getArrivalDateTime(), ticket2.getDepartureDateTime()).toMinutes() / 60.0;
     }
 }

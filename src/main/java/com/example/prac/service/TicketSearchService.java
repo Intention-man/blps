@@ -4,14 +4,13 @@ import com.example.prac.data.model.Route;
 import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
-import com.example.prac.data.res.TicketSearchResponse;
-import com.example.prac.data.res.TravelVariantDTO;
 import com.example.prac.mappers.SimpleTravelSearchRequestMapper;
 import com.example.prac.repository.TicketRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +47,8 @@ public class TicketSearchService {
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req) {
         simpleRouteVariants = new ArrayList<>();
-
-        List<Ticket> firstTicketCandidates = ticketRepository.findTicketsByDepartureData(
-                req.getServiceClass(), req.getPassengerCount(), req.getMaxPrice(), req.getMaxTravelHours(), req.getAvailableAirlines(),
+        List<Ticket> firstTicketCandidates = ticketRepository.findFirstTickets(
+                req.getServiceClass(), req.getPassengerCount(), req.getMaxPrice(), req.getMaxTravelTime(), req.getAvailableAirlines(),
                 req.getDepartureCity(), req.getDepartureDateStart(), req.getDepartureDateFinish(),
                 req.getDepartureTimeStart(), req.getDepartureTimeFinish());
 
@@ -67,31 +65,34 @@ public class TicketSearchService {
         }
     }
 
-    private void nextStep(SimpleTravelSearchRequest req, Route route, int lastNumberOfTransfers) {
-        if (lastNumberOfTransfers == 0)
+    private void nextStep(SimpleTravelSearchRequest req, Route route, int leftNumberOfTransfers) {
+        if (leftNumberOfTransfers == 0)
             return;
 
         Ticket lastTicket = route.getTickets().get(route.getTickets().size() - 1);
 
-        if (lastNumberOfTransfers == 1) {
+        if (leftNumberOfTransfers == 1) {
             LocalDate departureDateStart = lastTicket.getArrivalDate().isAfter(req.getArrivalDateStart()) ?
                     lastTicket.getArrivalDate() :
                     req.getArrivalDateStart();
 
-            List<Ticket> nextTicketCandidates = ticketRepository.findFullySuitableTickets(
-                    req.getServiceClass(), req.getPassengerCount(),
+            List<Ticket> nextTicketCandidates = ticketRepository.findFinishTickets(
+                    req.getServiceClass(),
+                    req.getPassengerCount(),
                     req.getMaxPrice() - route.getTotalPrice(),
-                    req.getMaxTravelHours() - route.getTotalHours(),
+                    req.getMaxTravelTime() - route.getTotalHours(),
                     req.getAvailableAirlines(),
                     lastTicket.getArrivalCity(),
                     departureDateStart,
                     req.getDepartureDateFinish(),
-                    LocalTime.MIN, LocalTime.MAX,
+                    LocalTime.MIN,
+                    LocalTime.MAX,
                     req.getArrivalCity(),
                     req.getArrivalDateStart(),
                     req.getArrivalDateFinish(),
                     req.getArrivalTimeStart(),
-                    req.getArrivalTimeFinish()
+                    req.getArrivalTimeFinish(),
+                    route.getMaxFinishDatetime()
             );
 
             for (Ticket ticket : nextTicketCandidates) {
@@ -99,14 +100,15 @@ public class TicketSearchService {
                 simpleRouteVariants.add(updatedRoute);
             }
         } else {
-            List<Ticket> nextTicketCandidates = ticketRepository.findTicketsByDepartureData(
-                    req.getServiceClass(), req.getPassengerCount(),
+            List<Ticket> nextTicketCandidates = ticketRepository.findIntermediateTickets(
+                    req.getServiceClass(),
+                    req.getPassengerCount(),
                     req.getMaxPrice() - route.getTotalPrice(),
-                    req.getMaxTravelHours() - route.getTotalHours(),
+                    req.getMaxTravelTime() - route.getTotalHours(),
                     req.getAvailableAirlines(),
                     lastTicket.getArrivalCity(),
-                    lastTicket.getArrivalDate(), req.getDepartureDateFinish(),
-                    LocalTime.MIN, LocalTime.MAX);
+                    lastTicket.getArrivalDateTime(),
+                    route.getMaxFinishDatetime());
 
             for (Ticket ticket : nextTicketCandidates) {
                 if (ticket.getArrivalCity().equals(req.getArrivalCity())) {
@@ -116,7 +118,7 @@ public class TicketSearchService {
                     }
                 } else if (canTicketBeIncludeInRoute(ticket, req)) {
                     Route updatedRoute = cloneRouteAddingTicket(route, ticket);
-                    nextStep(req, updatedRoute, lastNumberOfTransfers - 1);
+                    nextStep(req, updatedRoute, leftNumberOfTransfers - 1);
                 }
             }
         }
@@ -141,6 +143,7 @@ public class TicketSearchService {
         route.setArrivalCity(req.getArrivalCity());
         route.setTotalHours(ticket.getHours());
         route.setTotalPrice(ticket.getPrice());
+        route.setMaxFinishDatetime(calcMaxFinishDatetime(ticket, req));
         List<Ticket> list = new ArrayList<>();
         list.add(ticket);
         route.setTickets(list);
@@ -151,12 +154,19 @@ public class TicketSearchService {
         Route updatedRoute = new Route();
         updatedRoute.setDepartureCity(route.getDepartureCity());
         updatedRoute.setArrivalCity(ticket.getArrivalCity());
-        updatedRoute.setTotalHours(route.getTotalHours() + ticket.getHours());
+
+        double additionalTransferDuration = ticketService.calcTransferDurationInHours(route.getTickets().get(route.getTickets().size() - 1), ticket);
+        updatedRoute.setTotalHours(route.getTotalHours() + additionalTransferDuration);
+
         updatedRoute.setTotalPrice(route.getTotalPrice() + ticket.getPrice());
         //NOTE учитывая что Ticket - (по логике программы) неизменяемый объект, думаю, что можно просто копировать ссылки, а не делать глубокое копирование
         List<Ticket> list = new ArrayList<>(route.getTickets());
         list.add(ticket);
         updatedRoute.setTickets(list);
         return updatedRoute;
+    }
+
+    private LocalDateTime calcMaxFinishDatetime(Ticket ticket, SimpleTravelSearchRequest req) {
+        return ticket.getDepartureDateTime().plusHours(req.getMaxTravelTime());
     }
 }

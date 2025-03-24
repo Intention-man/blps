@@ -26,7 +26,10 @@ public class HibernateConfig {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.put("hibernate.show_sql", "true");
-
+        properties.put("hibernate.format_sql", "true");
+        properties.put("hibernate.use_sql_comments", "true");
+        properties.put("hibernate.type.descriptor.sql.BasicBinder", "TRACE");
+        properties.put("org.hibernate.SQL", "DEBUG");
         return properties;
     }
 

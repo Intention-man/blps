@@ -1,36 +1,93 @@
-[
-  {
-    "name": "Generate Tickets",
-    "request": {
-      "method": "POST",
-      "url": "{{base_url}}/api/tickets/generate",
-      "headers": {
-        "Content-Type": "application/json"
-      }
-    }
+{
+  "info": {
+    "name": "Ticket API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  {
-    "name": "Get All Tickets",
-    "request": {
-      "method": "GET",
-      "url": "{{base_url}}/api/tickets/all",
-      "headers": {
-        "Content-Type": "application/json"
-      }
-    }
-  },
-  {
-    "name": "Search Simple Routes",
-    "request": {
-      "method": "GET",
-      "url": "{{base_url}}/api/tickets/search_routes",
-      "body": {
-        "mode": "raw",
-        "raw": "{\n    \"passengerCount\": 2,\n    \"serviceClass\": \"E\",\n    \"maxPrice\": 1000,\n    \"maxTravelHours\": 10,\n    \"numberOfTransfers\": 1,\n    \"availableAirlines\": [\"Aeroflot\", \"Delta Air Lines\", \"Emirates\"],\n    \"departureCity\": \"Moscow\",\n    \"arrivalCity\": \"New York\",\n    \"departureDateStart\": \"2025-03-23\",\n    \"departureDateFinish\": \"2025-03-31\",\n    \"departureTimeStart\": \"08:00\",\n    \"departureTimeFinish\": \"10:00\",\n    \"arrivalDateStart\": \"2025-03-23\",\n    \"arrivalDateFinish\": \"2025-03-31\",\n    \"arrivalTimeStart\": \"12:00\",\n    \"arrivalTimeFinish\": \"14:00\",\n    \"backDepartureDateStart\": \"2025-04-01\",\n    \"backDepartureDateFinish\": \"2025-04-10\",\n    \"backDepartureTimeStart\": \"08:00\",\n    \"backDepartureTimeFinish\": \"10:00\",\n    \"backArrivalDateStart\": \"2025-04-01\",\n    \"backArrivalDateFinish\": \"2025-04-10\",\n    \"backArrivalTimeStart\": \"12:00\",\n    \"backArrivalTimeFinish\": \"14:00\"\n}"
+  "item": [
+    {
+      "name": "Generate Tickets",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tickets/generate",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets",
+            "generate"
+          ]
+        }
       },
-      "headers": {
-        "Content-Type": "application/json"
-      }
+      "response": []
+    },
+    {
+      "name": "Get All Tickets",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/tickets/all",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets",
+            "all"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Simple Routes",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"passengerCount\": 2, \"serviceClass\": \"E\", \"maxPrice\": 1000, \"maxTravelTime\": 10, \"numberOfTransfers\": 1, \"availableAirlines\": [\"Aeroflot\", \"Delta Air Lines\", \"Emirates\"], \"departureCity\": \"Moscow\", \"arrivalCity\": \"New York\", \"departureDateStart\": \"2025-03-23\", \"departureDateFinish\": \"2025-03-31\", \"departureTimeStart\": \"08:00\", \"departureTimeFinish\": \"10:00\", \"arrivalDateStart\": \"2025-03-23\", \"arrivalDateFinish\": \"2025-03-31\", \"arrivalTimeStart\": \"12:00\", \"arrivalTimeFinish\": \"14:00\", \"backDepartureDateStart\": \"2025-04-01\", \"backDepartureDateFinish\": \"2025-04-10\", \"backDepartureTimeStart\": \"08:00\", \"backDepartureTimeFinish\": \"10:00\", \"backArrivalDateStart\": \"2025-04-01\", \"backArrivalDateFinish\": \"2025-04-10\", \"backArrivalTimeStart\": \"12:00\", \"backArrivalTimeFinish\": \"14:00\" }"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/tickets/search_routes",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "tickets",
+            "search_routes"
+          ]
+        }
+      },
+      "response": []
     }
-  }
-]
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:18123"
+    }
+  ]
+}

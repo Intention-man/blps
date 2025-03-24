@@ -11,7 +11,7 @@ public class SimpleTravelSearchRequestDTO {
     private Integer passengerCount;
     private String serviceClass;
     private int maxPrice;
-    private int maxTravelHours;
+    private int maxTravelTime;
     private int numberOfTransfers;
     private List<String> availableAirlines;
     private String departureCity;

@@ -10,25 +10,28 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+
     @Query("SELECT t FROM Ticket t " +
             "WHERE t.serviceClass = :serviceClass " +
             "AND t.availableSeats >= :passengerCount " +
+            "AND t.airline IN :availableAirlines " +
             "AND t.price <= :maxPrice " +
-            "AND t.hours <= :maxTravelHours " +
+            "AND t.hours <= :maxTravelTime " +
             "AND t.departureCity = :departureCity " +
             "AND t.departureDate BETWEEN :departureDateStart AND :departureDateFinish " +
-            "AND t.departureTime BETWEEN :departureTimeStart AND :departureTimeFinish " +
-            "AND t.airline IN :availableAirlines")
-    List<Ticket> findTicketsByDepartureData(
+            "AND t.departureTime BETWEEN :departureTimeStart AND :departureTimeFinish"
+    )
+    List<Ticket> findFirstTickets(
             @Param("serviceClass") ServiceClass serviceClass,
             @Param("passengerCount") int passengerCount,
             @Param("maxPrice") int maxPrice,
-            @Param("maxTravelHours") double maxTravelHours,
+            @Param("maxTravelTime") double maxTravelTime,
             @Param("availableAirlines") List<Airline> availableAirlines,
             @Param("departureCity") City departureCity,
             @Param("departureDateStart") LocalDate departureDateStart,
@@ -40,20 +43,44 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Query("SELECT t FROM Ticket t " +
             "WHERE t.serviceClass = :serviceClass " +
             "AND t.availableSeats >= :passengerCount " +
+            "AND t.airline IN :availableAirlines " +
             "AND t.price <= :maxPrice " +
-            "AND t.hours <= :maxTravelHours " +
+            "AND t.hours <= :maxTravelTime " +
+            "AND t.departureCity = :departureCity " +
+            "AND t.departureDate BETWEEN :departureDateStart AND :departureDateFinish " +
+            "AND t.departureTime BETWEEN :departureTimeStart AND :departureTimeFinish " +
+            "AND t.departureDateTime >= :minDepartureStartDatetime " +
+            "AND t.arrivalDateTime <= :maxArrivalFinishDatetime"
+    )
+    List<Ticket> findIntermediateTickets(
+            @Param("serviceClass") ServiceClass serviceClass,
+            @Param("passengerCount") int passengerCount,
+            @Param("maxPrice") int maxPrice,
+            @Param("maxTravelTime") double maxTravelTime,
+            @Param("availableAirlines") List<Airline> availableAirlines,
+            @Param("departureCity") City departureCity,
+            @Param("minDepartureStartDatetime") LocalDateTime minDepartureStartDatetime,
+            @Param("maxArrivalFinishDatetime") LocalDateTime maxArrivalFinishDatetime
+    );
+
+    @Query("SELECT t FROM Ticket t " +
+            "WHERE t.serviceClass = :serviceClass " +
+            "AND t.availableSeats >= :passengerCount " +
+            "AND t.airline IN :availableAirlines " +
+            "AND t.price <= :maxPrice " +
+            "AND t.hours <= :maxTravelTime " +
             "AND t.departureCity = :departureCity " +
             "AND t.departureDate BETWEEN :departureDateStart AND :departureDateFinish " +
             "AND t.departureTime BETWEEN :departureTimeStart AND :departureTimeFinish " +
             "AND t.arrivalCity = :arrivalCity " +
             "AND t.arrivalDate BETWEEN :arrivalDateStart AND :arrivalDateFinish " +
             "AND t.arrivalTime BETWEEN :arrivalTimeStart AND :arrivalTimeFinish " +
-            "AND t.airline IN :availableAirlines")
-    List<Ticket> findFullySuitableTickets(
+            "AND t.arrivalDateTime <= :maxArrivalFinishDatetime")
+    List<Ticket> findFinishTickets(
             @Param("serviceClass") ServiceClass serviceClass,
             @Param("passengerCount") int passengerCount,
             @Param("maxPrice") int maxPrice,
-            @Param("maxTravelHours") double maxTravelHours,
+            @Param("maxTravelTime") double maxTravelTime,
             @Param("availableAirlines") List<Airline> availableAirlines,
             @Param("departureCity") City departureCity,
             @Param("departureDateStart") LocalDate departureDateStart,
@@ -64,14 +91,15 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("arrivalDateStart") LocalDate arrivalDateStart,
             @Param("arrivalDateFinish") LocalDate arrivalDateFinish,
             @Param("arrivalTimeStart") LocalTime arrivalTimeStart,
-            @Param("arrivalTimeFinish") LocalTime arrivalTimeFinish
+            @Param("arrivalTimeFinish") LocalTime arrivalTimeFinish,
+            @Param("maxArrivalFinishDatetime") LocalDateTime maxArrivalFinishDatetime
     );
 
     // NOTE может пригодиться, если захочу вначале делать sql запрос на создание представления,
     //  которое будет отфильтрованной таблицей Tickets по некоторым параметрам,
     //  по которым можно отфильтровать уже в начале поиска.
-    //  А потом можно искать билета на каждом этапе в этом VIEW, а не во всей таблице.
-    //  По идее это сократит скорость в несколько раз
+    //  А потом можно искать билеты на каждом этапе в этом VIEW, а не во всей таблице.
+    //  По идее это сократит время в несколько раз
     @Query("SELECT t FROM Ticket t " +
             "WHERE t.serviceClass = :serviceClass " +
             "AND t.availableSeats >= :passengerCount " +
