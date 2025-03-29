@@ -2,6 +2,7 @@ package com.example.prac.controllers;
 
 import com.example.prac.data.model.Route;
 import com.example.prac.data.res.CityDTO;
+import com.example.prac.data.res.RouteDTO;
 import com.example.prac.data.res.TicketDTO;
 import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
 import com.example.prac.data.res.TicketSearchResponse;
@@ -45,8 +46,8 @@ public class TicketController {
 //    }
 
     @GetMapping("/search_routes")
-    public ResponseEntity<List<Route>> searchSimpleRoutes(@RequestBody SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
-        List<Route> results = ticketSearchService.searchSimpleRoutes(simpleTravelSearchRequestDTO);
+    public ResponseEntity<List<RouteDTO>> searchSimpleRoutes(@RequestBody SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
+        List<RouteDTO> results = ticketSearchService.searchSimpleRoutes(simpleTravelSearchRequestDTO);
         return new ResponseEntity<>(results, HttpStatus.OK);
     }
 

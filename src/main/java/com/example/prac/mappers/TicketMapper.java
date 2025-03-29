@@ -20,12 +20,10 @@ public class TicketMapper implements Mapper<Ticket, TicketDTO> {
         if (ticket == null) {
             return null;
         }
-
         TicketDTO ticketDTO = modelMapper.map(ticket, TicketDTO.class);
-
+        ticketDTO.setAirline(ticket.getAirline().getName());
         ticketDTO.setDepartureCity(cityMapper.mapToName(ticket.getDepartureCity()));
         ticketDTO.setArrivalCity(cityMapper.mapToName(ticket.getArrivalCity()));
-
         return ticketDTO;
     }
 

@@ -61,45 +61,4 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
                 .arrivalTimeFinish(dto.getArrivalTimeFinish())
                 .build();
     }
-
-//    public SimpleRouteSearchRequest mapToEntity(SimpleRouteSearchRequest request) {
-//        ServiceClass serviceClass = ServiceClass.valueOf(request.getServiceClass());
-//
-//        City departureCity = cityService.findByName(request.getDepartureCity());
-//        City arrivalCity = cityService.findByName(String.valueOf(request.getArrivalCity()));
-//
-//        LocalDate departureDateStart = LocalDate.parse(request.getDepartureDateStart());
-//        LocalDate departureDateFinish = LocalDate.parse(request.getDepartureDateFinish());
-//        LocalTime departureTimeStart = LocalTime.parse(request.getDepartureTimeStart());
-//        LocalTime departureTimeFinish = LocalTime.parse(request.getDepartureTimeFinish());
-//
-//        LocalDate arrivalDateStart = LocalDate.parse(request.getArrivalDateStart());
-//        LocalDate arrivalDateFinish = LocalDate.parse(request.getArrivalDateFinish());
-//        LocalTime arrivalTimeStart = LocalTime.parse(request.getArrivalTimeStart());
-//        LocalTime arrivalTimeFinish = LocalTime.parse(request.getArrivalTimeFinish());
-//
-//        List<Airline> availableAirlines = request.getAvailableAirlines()
-//                .stream()
-//                .map(airlineName -> airlineService.findByName(airlineName))
-//                .collect(Collectors.toList());
-//
-//        return SimpleRouteSearchRequest.builder()
-//                .passengerCount(request.getPassengerCount())
-//                .serviceClass(serviceClass)
-//                .maxPrice(request.getMaxPrice())
-//                .maxTravelTime(request.getMaxTravelTime())
-//                .numberOfTransfers(request.getNumberOfTransfers())
-//                .availableAirlines(availableAirlines)
-//                .departureCity(departureCity)
-//                .departureDateStart(departureDateStart)
-//                .departureDateFinish(departureDateFinish)
-//                .departureTimeStart(departureTimeStart)
-//                .departureTimeFinish(departureTimeFinish)
-//                .arrivalCity(arrivalCity)
-//                .arrivalDateStart(arrivalDateStart)
-//                .arrivalDateFinish(arrivalDateFinish)
-//                .arrivalTimeStart(arrivalTimeStart)
-//                .arrivalTimeFinish(arrivalTimeFinish)
-//                .build();
-//    }
 }

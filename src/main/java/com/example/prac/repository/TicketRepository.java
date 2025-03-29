@@ -47,8 +47,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND t.price <= :maxPrice " +
             "AND t.hours <= :maxTravelTime " +
             "AND t.departureCity = :departureCity " +
-            "AND t.departureDate BETWEEN :departureDateStart AND :departureDateFinish " +
-            "AND t.departureTime BETWEEN :departureTimeStart AND :departureTimeFinish " +
             "AND t.departureDateTime >= :minDepartureStartDatetime " +
             "AND t.arrivalDateTime <= :maxArrivalFinishDatetime"
     )
@@ -75,7 +73,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND t.arrivalCity = :arrivalCity " +
             "AND t.arrivalDate BETWEEN :arrivalDateStart AND :arrivalDateFinish " +
             "AND t.arrivalTime BETWEEN :arrivalTimeStart AND :arrivalTimeFinish " +
-            "AND t.arrivalDateTime <= :maxArrivalFinishDatetime")
+            "AND t.arrivalDateTime <= :maxArrivalFinishDatetime"
+    )
     List<Ticket> findFinishTickets(
             @Param("serviceClass") ServiceClass serviceClass,
             @Param("passengerCount") int passengerCount,

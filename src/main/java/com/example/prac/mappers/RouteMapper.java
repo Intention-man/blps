@@ -48,8 +48,4 @@ public class RouteMapper implements Mapper<Route, RouteDTO> {
                 .collect(Collectors.toList()));
         return route;
     }
-
-    public Route copy(Route route) {
-        return modelMapper.map(route, Route.class);
-    }
 }
