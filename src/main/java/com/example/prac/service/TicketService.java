@@ -100,8 +100,4 @@ public class TicketService {
     public double calculateTravelTimeInHours(Ticket ticket) {
         return java.time.Duration.between(ticket.getDepartureDateTime(), ticket.getArrivalDateTime()).toMinutes() / 60.0;
     }
-
-    public double calcTransferDurationInHours(Ticket ticket1, Ticket ticket2) {
-        return java.time.Duration.between(ticket1.getArrivalDateTime(), ticket2.getDepartureDateTime()).toMinutes() / 60.0;
-    }
 }

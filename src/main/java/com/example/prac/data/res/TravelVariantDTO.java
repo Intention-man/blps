@@ -7,11 +7,11 @@ import java.util.List;
 
 @Data
 public class TravelVariantDTO {
-    private Integer totalPrice;
+    private double totalPrice;
     private List<RouteDTO> routes;
 
-    public TravelVariantDTO(){
-        this.totalPrice = 0;
-        this.routes = new ArrayList<>();
+    public TravelVariantDTO(double totalPrice, List<RouteDTO> routes){
+        this.totalPrice = totalPrice;
+        this.routes = routes;
     }
 }

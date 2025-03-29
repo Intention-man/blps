@@ -1,14 +1,7 @@
 package com.example.prac.controllers;
 
-import com.example.prac.data.model.Route;
-import com.example.prac.data.res.CityDTO;
-import com.example.prac.data.res.RouteDTO;
-import com.example.prac.data.res.TicketDTO;
-import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
-import com.example.prac.data.res.TicketSearchResponse;
-import com.example.prac.data.model.City;
-import com.example.prac.mappers.CityMapper;
-import com.example.prac.service.CityService;
+import com.example.prac.data.res.*;
+import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
@@ -17,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -25,8 +17,6 @@ import java.util.stream.Collectors;
 public class TicketController {
     private TicketSearchService ticketSearchService;
     private TicketService ticketService;
-    private CityService cityService;
-    private CityMapper cityMapper;
 
     @PostMapping("/generate")
     public ResponseEntity<String> generateTickets() {
@@ -34,37 +24,24 @@ public class TicketController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/1_way_search_routes")
+    public ResponseEntity<TicketSearchResponseDTO> searchSimpleRoutes1Way(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
+        List<TravelVariantDTO> results = ticketSearchService.searchSimpleRoutes(reqDto, false);
+        TicketSearchResponseDTO response = new TicketSearchResponseDTO();
+        response.setVariants(results);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/round_trip_search_routes")
+    public ResponseEntity<TicketSearchResponseDTO> searchSimpleRoutesRoundTrip(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
+        List<TravelVariantDTO> results = ticketSearchService.searchSimpleRoutes(reqDto, true);
+        TicketSearchResponseDTO response = new TicketSearchResponseDTO();
+        response.setVariants(results);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<TicketDTO>> getTickets() {
         return new ResponseEntity<>(ticketService.getAllTicketDTOs(), HttpStatus.OK);
-    }
-
-//    @GetMapping("/search_simple")
-//    public ResponseEntity<TicketSearchResponse> searchSimpleRoutes(@RequestBody SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
-//        TicketSearchResponse results = ticketSearchService.searchSimpleRoutes(simpleTravelSearchRequestDTO);
-//        return new ResponseEntity<>(results, HttpStatus.OK);
-//    }
-
-    @GetMapping("/search_routes")
-    public ResponseEntity<List<RouteDTO>> searchSimpleRoutes(@RequestBody SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
-        List<RouteDTO> results = ticketSearchService.searchSimpleRoutes(simpleTravelSearchRequestDTO);
-        return new ResponseEntity<>(results, HttpStatus.OK);
-    }
-
-    @PostMapping("/cities")
-    public ResponseEntity<String> createCity(@RequestBody CityDTO cityDTO) {
-        City city = City.builder()
-                .name(cityDTO.getName())
-                .build();
-        cityService.getAllCities().add(city);
-        return new ResponseEntity<>("City created", HttpStatus.CREATED);
-    }
-
-    @GetMapping("/cities")
-    public ResponseEntity<List<CityDTO>> getAllCities() {
-        List<CityDTO> cities = cityService.getAllCities().stream().map(
-                city -> cityMapper.mapTo(city)
-        ).collect(Collectors.toList());
-        return new ResponseEntity<>(cities, HttpStatus.OK);
     }
 }

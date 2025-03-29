@@ -1,4 +1,4 @@
-package com.example.prac.data.req.complex;
+package com.example.prac.data.req;
 
 import lombok.Data;
 

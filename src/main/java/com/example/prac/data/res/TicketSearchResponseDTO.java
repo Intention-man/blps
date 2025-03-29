@@ -5,6 +5,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TicketSearchResponse {
-    private List<TravelVariantDTO> routeOptions;
+public class TicketSearchResponseDTO {
+    private List<TravelVariantDTO> variants;
 }

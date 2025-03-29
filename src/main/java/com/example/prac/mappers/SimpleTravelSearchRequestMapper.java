@@ -1,17 +1,15 @@
 package com.example.prac.mappers;
 
-import com.example.prac.data.model.Airline;
-import com.example.prac.data.model.City;
+import com.example.prac.data.model.Route;
 import com.example.prac.data.model.ServiceClass;
-import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
 import com.example.prac.data.model.SimpleTravelSearchRequest;
+import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -21,6 +19,7 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
     private final ModelMapper modelMapper;
     private final CityService cityService;
     private final AirlineService airlineService;
+
 
     @Override
     public SimpleTravelSearchRequestDTO mapTo(SimpleTravelSearchRequest req) {
@@ -33,24 +32,17 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
             return null;
         }
 
-        List<Airline> airlines = dto.getAvailableAirlines().stream()
-                .map(airlineService::findByName)
-                .collect(Collectors.toList());
-
-        City departureCity = cityService.findByName(dto.getDepartureCity());
-        City arrivalCity = cityService.findByName(dto.getArrivalCity());
-
-        ServiceClass serviceClass = ServiceClass.valueOf(dto.getServiceClass());
-
         return SimpleTravelSearchRequest.builder()
                 .passengerCount(dto.getPassengerCount())
-                .serviceClass(serviceClass)
+                .serviceClass(ServiceClass.valueOf(dto.getServiceClass()))
                 .maxPrice(dto.getMaxPrice())
                 .maxTravelTime(dto.getMaxTravelTime())
                 .numberOfTransfers(dto.getNumberOfTransfers())
-                .availableAirlines(airlines)
-                .departureCity(departureCity)
-                .arrivalCity(arrivalCity)
+                .availableAirlines(dto.getAvailableAirlines().stream()
+                        .map(airlineService::findByName)
+                        .collect(Collectors.toList()))
+                .departureCity(cityService.findByName(dto.getDepartureCity()))
+                .arrivalCity(cityService.findByName(dto.getArrivalCity()))
                 .departureDateStart(dto.getDepartureDateStart())
                 .departureDateFinish(dto.getDepartureDateFinish())
                 .departureTimeStart(dto.getDepartureTimeStart())
@@ -60,5 +52,28 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
                 .arrivalTimeStart(dto.getArrivalTimeStart())
                 .arrivalTimeFinish(dto.getArrivalTimeFinish())
                 .build();
+    }
+
+    public SimpleTravelSearchRequest mapFrom2(SimpleTravelSearchRequestDTO req0, Route route) {
+        SimpleTravelSearchRequest reqBack = modelMapper.map(req0, SimpleTravelSearchRequest.class);
+        reqBack.setServiceClass(ServiceClass.valueOf(req0.getServiceClass()));
+        reqBack.setMaxPrice(req0.getMaxPrice() - route.getTotalPrice());
+        reqBack.setAvailableAirlines(
+                req0.getAvailableAirlines().stream()
+                        .map(airlineService::findByName)
+                        .collect(Collectors.toList())
+        );
+        reqBack.setDepartureCity(cityService.findByName(req0.getArrivalCity()));
+        reqBack.setArrivalCity(cityService.findByName(req0.getDepartureCity()));
+        reqBack.setDepartureDateStart(req0.getBackDepartureDateStart());
+        reqBack.setDepartureDateFinish(req0.getBackDepartureDateFinish());
+        reqBack.setDepartureTimeStart(req0.getBackDepartureTimeStart());
+        reqBack.setDepartureTimeFinish(req0.getBackDepartureTimeFinish());
+        reqBack.setArrivalDateStart(req0.getBackArrivalDateStart());
+        reqBack.setArrivalDateFinish(req0.getBackArrivalDateFinish());
+        reqBack.setArrivalTimeStart(req0.getBackArrivalTimeStart());
+        reqBack.setArrivalTimeFinish(req0.getBackArrivalTimeFinish());
+
+        return reqBack;
     }
 }

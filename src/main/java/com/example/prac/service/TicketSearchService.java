@@ -3,8 +3,9 @@ package com.example.prac.service;
 import com.example.prac.data.model.Route;
 import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.data.model.Ticket;
-import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.data.res.RouteDTO;
+import com.example.prac.data.res.TravelVariantDTO;
 import com.example.prac.mappers.RouteMapper;
 import com.example.prac.mappers.SimpleTravelSearchRequestMapper;
 import com.example.prac.repository.TicketRepository;
@@ -20,37 +21,39 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TicketSearchService {
-    private TicketService ticketService;
-    private SimpleTravelSearchRequestMapper simpleTravelSearchRequestMapper;
+    private SimpleTravelSearchRequestMapper simpleReqMapper;
     private TicketRepository ticketRepository;
-    private List<Route> simpleRouteVariants;
     private RouteMapper routeMapper;
 
-    //NOTE пока думаю сделать поиск в ширину. По сути все города (узлы) и перелеты между ними (ребра) можно представить как граф.
-    // Сначала ищем билеты-кандидаты на первый полет в маршруте. Смотрим сколько есть таких,
-    // которые сразу же нас ведут к цели при соблюдении всех условий (цена, класс, даты, время).
-    // Если нашли N штук - заканчиваем поиск. Если нет, то ищем для каждого первого в маршруте билета второй билет в маршруте и т д.
-    // Ясно что надо выбрать относительно небольшое N, сделать мало возможных городов
-    // и наверное сделать лимит на поиск в ширину (ex: не более 4 билетов в перелете между A и B)
-
-//    public TicketSearchResponse searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
-//        SimpleTravelSearchRequest req = simpleTravelSearchRequestMapper.mapFrom(simpleTravelSearchRequestDTO);
-//        List<TravelVariantDTO> travelVariants = new ArrayList<>();
-//        // get res
-//        TicketSearchResponse ticketSearchResponse = new TicketSearchResponse();
-//        ticketSearchResponse.setRouteOptions(travelVariants);
-//        return ticketSearchResponse;
-//    }
-
-    public List<RouteDTO> searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
-        SimpleTravelSearchRequest req = simpleTravelSearchRequestMapper.mapFrom(simpleTravelSearchRequestDTO);
-        findAndSetSimpleRouteVariants(req);
-        simpleRouteVariants = simpleRouteVariants.stream().filter(route -> route.getTickets().size() > 2).toList();
-        return simpleRouteVariants.stream().map(routeMapper::mapTo).toList();
+    public List<TravelVariantDTO> searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets) {
+        SimpleTravelSearchRequest req = simpleReqMapper.mapFrom(simpleReqDTO);
+        List<Route> simpleRouteVariants = new ArrayList<>();
+        findAndSetSimpleRouteVariants(req, simpleRouteVariants);
+        if (needBackTickets) {
+            List<TravelVariantDTO> result = new ArrayList<>();
+            for (Route route : simpleRouteVariants) {
+                SimpleTravelSearchRequest reqBack = simpleReqMapper.mapFrom2(simpleReqDTO, route);
+                List<Route> simpleRouteVariantsBack = new ArrayList<>();
+                findAndSetSimpleRouteVariants(reqBack, simpleRouteVariantsBack);
+                for (Route routeBack : simpleRouteVariantsBack) {
+                    RouteDTO r1 = routeMapper.mapTo(route);
+                    RouteDTO r2 = routeMapper.mapTo(routeBack);
+                    result.add(new TravelVariantDTO(
+                            route.getTotalPrice() + routeBack.getTotalPrice(),
+                            List.of(r1, r2)
+                    ));
+                }
+            }
+            return result;
+        } else {
+            return simpleRouteVariants.stream()
+                    .map(routeMapper::mapTo)
+                    .map(routeDTO -> new TravelVariantDTO(routeDTO.getTotalPrice(), List.of(routeDTO)))
+                    .toList();
+        }
     }
 
-    private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req) {
-        simpleRouteVariants = new ArrayList<>();
+    private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req, List<Route> simpleRouteVariants) {
         List<Ticket> firstTicketCandidates = ticketRepository.findFirstTickets(
                 req.getServiceClass(), req.getPassengerCount(), req.getMaxPrice(), req.getMaxTravelTime(), req.getAvailableAirlines(),
                 req.getDepartureCity(), req.getDepartureDateStart(), req.getDepartureDateFinish(),
@@ -64,12 +67,12 @@ public class TicketSearchService {
                 }
             } else if (canTicketBeIncludeInRoute(ticket, req)) {
                 Route route = initRouteWithFirstTicket(ticket, req);
-                nextStep(req, route, req.getNumberOfTransfers() - 1);
+                nextStep(req, route, req.getNumberOfTransfers() - 1, simpleRouteVariants);
             }
         }
     }
 
-    private void nextStep(SimpleTravelSearchRequest req, Route route, int leftNumberOfTransfers) {
+    private void nextStep(SimpleTravelSearchRequest req, Route route, int leftNumberOfTransfers, List<Route> simpleRouteVariants) {
         if (leftNumberOfTransfers == 0)
             return;
 
@@ -122,7 +125,7 @@ public class TicketSearchService {
                     }
                 } else if (canTicketBeIncludeInRoute(ticket, req)) {
                     Route updatedRoute = cloneRouteAddingTicket(route, ticket);
-                    nextStep(req, updatedRoute, leftNumberOfTransfers - 1);
+                    nextStep(req, updatedRoute, leftNumberOfTransfers - 1, simpleRouteVariants);
                 }
             }
         }
@@ -159,7 +162,7 @@ public class TicketSearchService {
         updatedRoute.setDepartureCity(route.getDepartureCity());
         updatedRoute.setArrivalCity(ticket.getArrivalCity());
 
-        double additionalTransferDuration = ticketService.calcTransferDurationInHours(route.getTickets().get(route.getTickets().size() - 1), ticket);
+        double additionalTransferDuration = calcTransferDurationInHours(route.getTickets().get(route.getTickets().size() - 1), ticket);
         updatedRoute.setTotalHours(route.getTotalHours() + additionalTransferDuration);
 
         updatedRoute.setTotalPrice(route.getTotalPrice() + ticket.getPrice());
@@ -174,5 +177,9 @@ public class TicketSearchService {
 
     private LocalDateTime calcMaxFinishDatetime(Ticket ticket, SimpleTravelSearchRequest req) {
         return ticket.getDepartureDateTime().plusHours(req.getMaxTravelTime());
+    }
+
+    public double calcTransferDurationInHours(Ticket ticket1, Ticket ticket2) {
+        return java.time.Duration.between(ticket1.getArrivalDateTime(), ticket2.getDepartureDateTime()).toMinutes() / 60.0;
     }
 }
