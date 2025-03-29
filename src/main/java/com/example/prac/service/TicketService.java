@@ -52,7 +52,8 @@ public class TicketService {
                     ServiceClass serviceClass = ServiceClass.values()[random.nextInt(ServiceClass.values().length)];
                     String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
 
-                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(2));
+//                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(2));
+                    LocalDate departureDate = LocalDate.of(2026, 3, 26).plusDays(random.nextInt(2));
                     LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
                     LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
 

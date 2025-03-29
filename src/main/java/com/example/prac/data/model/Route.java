@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Route {
-    private Long id;
     private City departureCity;
     private City arrivalCity;
     private double totalHours;

@@ -4,6 +4,8 @@ import com.example.prac.data.model.Route;
 import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.simple.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.res.RouteDTO;
+import com.example.prac.mappers.RouteMapper;
 import com.example.prac.mappers.SimpleTravelSearchRequestMapper;
 import com.example.prac.repository.TicketRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class TicketSearchService {
     private SimpleTravelSearchRequestMapper simpleTravelSearchRequestMapper;
     private TicketRepository ticketRepository;
     private List<Route> simpleRouteVariants;
+    private RouteMapper routeMapper;
 
     //NOTE пока думаю сделать поиск в ширину. По сути все города (узлы) и перелеты между ними (ребра) можно представить как граф.
     // Сначала ищем билеты-кандидаты на первый полет в маршруте. Смотрим сколько есть таких,
@@ -39,10 +42,11 @@ public class TicketSearchService {
 //        return ticketSearchResponse;
 //    }
 
-    public List<Route> searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
+    public List<RouteDTO> searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleTravelSearchRequestDTO) {
         SimpleTravelSearchRequest req = simpleTravelSearchRequestMapper.mapFrom(simpleTravelSearchRequestDTO);
         findAndSetSimpleRouteVariants(req);
-        return simpleRouteVariants;
+        simpleRouteVariants = simpleRouteVariants.stream().filter(route -> route.getTickets().size() > 2).toList();
+        return simpleRouteVariants.stream().map(routeMapper::mapTo).toList();
     }
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req) {
@@ -86,7 +90,7 @@ public class TicketSearchService {
                     departureDateStart,
                     req.getDepartureDateFinish(),
                     LocalTime.MIN,
-                    LocalTime.MAX,
+                    LocalTime.of(23, 59, 59),
                     req.getArrivalCity(),
                     req.getArrivalDateStart(),
                     req.getArrivalDateFinish(),
@@ -159,6 +163,8 @@ public class TicketSearchService {
         updatedRoute.setTotalHours(route.getTotalHours() + additionalTransferDuration);
 
         updatedRoute.setTotalPrice(route.getTotalPrice() + ticket.getPrice());
+        updatedRoute.setMaxFinishDatetime(route.getMaxFinishDatetime());
+
         //NOTE учитывая что Ticket - (по логике программы) неизменяемый объект, думаю, что можно просто копировать ссылки, а не делать глубокое копирование
         List<Ticket> list = new ArrayList<>(route.getTickets());
         list.add(ticket);

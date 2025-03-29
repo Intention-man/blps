@@ -8,7 +8,6 @@ import java.time.LocalTime;
 
 @Data
 public class TicketDTO {
-    private Long id;
     private String airline;
     private String serviceClass;
     private int price;
@@ -17,9 +16,9 @@ public class TicketDTO {
     private String departureCity;
     private LocalDate departureDate;
     private LocalTime departureTime;
-    private LocalDateTime departureDateTime; // Новое поле
+    private LocalDateTime departureDateTime;
     private String arrivalCity;
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
-    private LocalDateTime arrivalDateTime; // Новое поле
+    private LocalDateTime arrivalDateTime;
 }
