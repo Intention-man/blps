@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TicketSearchResponseDTO {
+public class SearchResponseDTO {
     private int variantsCount;
     private List<TravelVariantDTO> variants;
 }

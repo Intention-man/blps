@@ -36,5 +36,4 @@ public class SimpleTravelSearchRequest {
     private LocalDate arrivalDateFinish;
     private LocalTime arrivalTimeStart;
     private LocalTime arrivalTimeFinish;
-
 }

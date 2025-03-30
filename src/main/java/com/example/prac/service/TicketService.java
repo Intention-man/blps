@@ -100,4 +100,12 @@ public class TicketService {
     public double calculateTravelTimeInHours(Ticket ticket) {
         return java.time.Duration.between(ticket.getDepartureDateTime(), ticket.getArrivalDateTime()).toMinutes() / 60.0;
     }
+
+    public LocalDate max(LocalDate date1, LocalDate date2) {
+        return date1.isAfter(date2) ? date1 : date2;
+    }
+
+    public LocalTime max(LocalTime time1, LocalTime time2) {
+        return time1.isAfter(time2) ? time1 : time2;
+    }
 }

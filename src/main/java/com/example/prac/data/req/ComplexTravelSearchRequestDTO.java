@@ -5,12 +5,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ComplexTravelSearchRequest {
+public class ComplexTravelSearchRequestDTO {
     private Integer passengerCount;
     private String serviceClass;
     private int maxPrice;
     private int maxTravelTime;
     private int numberOfTransfers;
     private List<String> availableAirlines;
-    private List<ComplexRouteLeg> routes;
+    private List<ComplexRouteLegDTO> complexRouteLegs;
 }

@@ -6,13 +6,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-public class ComplexRouteLeg {
+public class ComplexRouteLegDTO {
     private String departureCity;
     private LocalDate departureDate;
     private LocalTime departureTimeStart;
     private LocalTime departureTimeFinish;
     private String arrivalCity;
-    private LocalDate arrivalDate;
     private LocalTime arrivalTimeStart;
     private LocalTime arrivalTimeFinish;
 }
