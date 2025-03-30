@@ -5,6 +5,7 @@ import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.data.res.RouteDTO;
+import com.example.prac.data.res.TicketSearchResponseDTO;
 import com.example.prac.data.res.TravelVariantDTO;
 import com.example.prac.mappers.RouteMapper;
 import com.example.prac.mappers.SimpleTravelSearchRequestMapper;
@@ -25,12 +26,12 @@ public class TicketSearchService {
     private TicketRepository ticketRepository;
     private RouteMapper routeMapper;
 
-    public List<TravelVariantDTO> searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets) {
+    public TicketSearchResponseDTO searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets) {
+        List<TravelVariantDTO> result = new ArrayList<>();
         SimpleTravelSearchRequest req = simpleReqMapper.mapFrom(simpleReqDTO);
         List<Route> simpleRouteVariants = new ArrayList<>();
         findAndSetSimpleRouteVariants(req, simpleRouteVariants);
         if (needBackTickets) {
-            List<TravelVariantDTO> result = new ArrayList<>();
             for (Route route : simpleRouteVariants) {
                 SimpleTravelSearchRequest reqBack = simpleReqMapper.mapFrom2(simpleReqDTO, route);
                 List<Route> simpleRouteVariantsBack = new ArrayList<>();
@@ -44,13 +45,17 @@ public class TicketSearchService {
                     ));
                 }
             }
-            return result;
         } else {
-            return simpleRouteVariants.stream()
+            result = simpleRouteVariants.stream()
                     .map(routeMapper::mapTo)
                     .map(routeDTO -> new TravelVariantDTO(routeDTO.getTotalPrice(), List.of(routeDTO)))
                     .toList();
         }
+
+        TicketSearchResponseDTO response = new TicketSearchResponseDTO();
+        response.setVariants(result);
+        response.setVariantsCount(result.size());
+        return response;
     }
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req, List<Route> simpleRouteVariants) {

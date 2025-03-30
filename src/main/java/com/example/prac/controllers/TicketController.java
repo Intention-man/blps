@@ -26,17 +26,13 @@ public class TicketController {
 
     @GetMapping("/1_way_search_routes")
     public ResponseEntity<TicketSearchResponseDTO> searchSimpleRoutes1Way(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
-        List<TravelVariantDTO> results = ticketSearchService.searchSimpleRoutes(reqDto, false);
-        TicketSearchResponseDTO response = new TicketSearchResponseDTO();
-        response.setVariants(results);
+        TicketSearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, false);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/round_trip_search_routes")
     public ResponseEntity<TicketSearchResponseDTO> searchSimpleRoutesRoundTrip(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
-        List<TravelVariantDTO> results = ticketSearchService.searchSimpleRoutes(reqDto, true);
-        TicketSearchResponseDTO response = new TicketSearchResponseDTO();
-        response.setVariants(results);
+        TicketSearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
