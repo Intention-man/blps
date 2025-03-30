@@ -163,7 +163,7 @@ public class TicketSearchService {
         updatedRoute.setArrivalCity(ticket.getArrivalCity());
 
         double additionalTransferDuration = calcTransferDurationInHours(route.getTickets().get(route.getTickets().size() - 1), ticket);
-        updatedRoute.setTotalHours(route.getTotalHours() + additionalTransferDuration);
+        updatedRoute.setTotalHours(route.getTotalHours() + additionalTransferDuration + ticket.getHours());
 
         updatedRoute.setTotalPrice(route.getTotalPrice() + ticket.getPrice());
         updatedRoute.setMaxFinishDatetime(route.getMaxFinishDatetime());

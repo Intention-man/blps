@@ -54,26 +54,26 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
                 .build();
     }
 
-    public SimpleTravelSearchRequest mapFrom2(SimpleTravelSearchRequestDTO req0, Route route) {
-        SimpleTravelSearchRequest reqBack = modelMapper.map(req0, SimpleTravelSearchRequest.class);
-        reqBack.setServiceClass(ServiceClass.valueOf(req0.getServiceClass()));
-        reqBack.setMaxPrice(req0.getMaxPrice() - route.getTotalPrice());
-        reqBack.setAvailableAirlines(
-                req0.getAvailableAirlines().stream()
+    public SimpleTravelSearchRequest mapFrom2(SimpleTravelSearchRequestDTO dto, Route route) {
+        return SimpleTravelSearchRequest.builder()
+                .passengerCount(dto.getPassengerCount())
+                .serviceClass(ServiceClass.valueOf(dto.getServiceClass()))
+                .maxPrice(dto.getMaxPrice() - route.getTotalPrice())
+                .maxTravelTime(dto.getMaxTravelTime())
+                .numberOfTransfers(dto.getNumberOfTransfers())
+                .availableAirlines(dto.getAvailableAirlines().stream()
                         .map(airlineService::findByName)
-                        .collect(Collectors.toList())
-        );
-        reqBack.setDepartureCity(cityService.findByName(req0.getArrivalCity()));
-        reqBack.setArrivalCity(cityService.findByName(req0.getDepartureCity()));
-        reqBack.setDepartureDateStart(req0.getBackDepartureDateStart());
-        reqBack.setDepartureDateFinish(req0.getBackDepartureDateFinish());
-        reqBack.setDepartureTimeStart(req0.getBackDepartureTimeStart());
-        reqBack.setDepartureTimeFinish(req0.getBackDepartureTimeFinish());
-        reqBack.setArrivalDateStart(req0.getBackArrivalDateStart());
-        reqBack.setArrivalDateFinish(req0.getBackArrivalDateFinish());
-        reqBack.setArrivalTimeStart(req0.getBackArrivalTimeStart());
-        reqBack.setArrivalTimeFinish(req0.getBackArrivalTimeFinish());
-
-        return reqBack;
+                        .collect(Collectors.toList()))
+                .departureCity(cityService.findByName(dto.getArrivalCity()))
+                .arrivalCity(cityService.findByName(dto.getDepartureCity()))
+                .departureDateStart(dto.getBackDepartureDateStart())
+                .departureDateFinish(dto.getBackDepartureDateFinish())
+                .departureTimeStart(dto.getBackDepartureTimeStart())
+                .departureTimeFinish(dto.getBackDepartureTimeFinish())
+                .arrivalDateStart(dto.getBackArrivalDateStart())
+                .arrivalDateFinish(dto.getBackArrivalDateFinish())
+                .arrivalTimeStart(dto.getBackArrivalTimeStart())
+                .arrivalTimeFinish(dto.getBackArrivalTimeFinish())
+                .build();
     }
 }
