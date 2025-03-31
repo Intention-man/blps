@@ -1,9 +1,11 @@
 package com.example.prac.service;
 
-import com.example.prac.data.model.*;
+import com.example.prac.data.model.ComplexTravelSearchRequest;
+import com.example.prac.data.model.Route;
+import com.example.prac.data.model.SimpleTravelSearchRequest;
+import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
-import com.example.prac.data.res.RouteDTO;
 import com.example.prac.data.res.SearchResponseDTO;
 import com.example.prac.data.res.TravelVariantDTO;
 import com.example.prac.mappers.*;
@@ -27,8 +29,11 @@ public class TicketSearchService {
     private TicketService ticketService;
     private RouteMapper routeMapper;
 
-    public SearchResponseDTO searchComplexRoutes(ComplexTravelSearchRequestDTO reqDto) {
+    public SearchResponseDTO searchComplexRoutes(ComplexTravelSearchRequestDTO reqDto, int page, int limit) {
+        int maxResCount = (page + 1) * limit;
+
         ComplexTravelSearchRequest complexReq = complexReqMapper.mapFrom(reqDto);
+        int legsCount = complexReq.getComplexRouteLegs().size();
 
         List<TravelVariant> variants = new ArrayList<>();
         List<TravelVariant> newVariants = new ArrayList<>();
@@ -42,7 +47,7 @@ public class TicketSearchService {
             variants.add(variant);
         }
 
-        for (int legIndex = 1; legIndex < complexReq.getComplexRouteLegs().size(); legIndex++){
+        for (int legIndex = 1; legIndex < legsCount; legIndex++) {
             for (TravelVariant variant : variants) {
                 SimpleTravelSearchRequest simpleReq = complexReqMapper.mapToLeg(complexReq, legIndex, variant);
                 if (simpleReq == null) continue;
@@ -52,6 +57,8 @@ public class TicketSearchService {
                 for (Route route : simpleRoutes) {
                     TravelVariant newVariant = cloneTravelVariantAddingRoute(variant, route);
                     newVariants.add(newVariant);
+                    if (legIndex == legsCount - 1 && newVariants.size() == maxResCount)
+                        return initResponse(newVariants, page, limit);
                 }
             }
 
@@ -59,14 +66,11 @@ public class TicketSearchService {
             newVariants = new ArrayList<>();
         }
 
-        SearchResponseDTO response = new SearchResponseDTO();
-        response.setVariants(variants.stream().map(travelVariantMapper::mapTo).toList());
-        response.setVariantsCount(variants.size());
-        return response;
+        return initResponse(variants, page, limit);
     }
 
-    public SearchResponseDTO searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets) {
-        List<TravelVariantDTO> variantsDto = new ArrayList<>();
+    public SearchResponseDTO searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets, int page, int limit) {
+        List<TravelVariant> variants = new ArrayList<>();
         SimpleTravelSearchRequest req = simpleReqMapper.mapFrom(simpleReqDTO);
         List<Route> routes = new ArrayList<>();
         findAndSetSimpleRouteVariants(req, routes);
@@ -76,25 +80,19 @@ public class TicketSearchService {
                 List<Route> routesBack = new ArrayList<>();
                 findAndSetSimpleRouteVariants(reqBack, routesBack);
                 for (Route routeBack : routesBack) {
-                    RouteDTO r1 = routeMapper.mapTo(route);
-                    RouteDTO r2 = routeMapper.mapTo(routeBack);
-                    variantsDto.add(new TravelVariantDTO(
+                    variants.add(new TravelVariant(
                             route.getTotalPrice() + routeBack.getTotalPrice(),
-                            List.of(r1, r2)
+                            List.of(route, routeBack)
                     ));
                 }
             }
         } else {
-            variantsDto = routes.stream()
-                    .map(routeMapper::mapTo)
-                    .map(routeDTO -> new TravelVariantDTO(routeDTO.getTotalPrice(), List.of(routeDTO)))
+            variants = routes.stream()
+                    .map(route -> new TravelVariant(route.getTotalPrice(), List.of(route)))
                     .toList();
         }
 
-        SearchResponseDTO response = new SearchResponseDTO();
-        response.setVariants(variantsDto);
-        response.setVariantsCount(variantsDto.size());
-        return response;
+        return initResponse(variants, page, limit);
     }
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req, List<Route> simpleRouteVariants) {
@@ -223,7 +221,20 @@ public class TicketSearchService {
         return new TravelVariant(route.getTotalPrice(), new ArrayList<>(List.of(route)));
     }
 
-    private TravelVariant cloneTravelVariantAddingRoute(TravelVariant variant, Route route){
+    private SearchResponseDTO initResponse(List<TravelVariant> variants, int page, int limit) {
+        List<TravelVariantDTO> list = variants.stream().map(travelVariantMapper::mapTo).toList();
+        int toIndex = Math.min((page + 1) * limit, list.size()) - 1;
+        int fromIndex = Math.max(0, toIndex + 1 - limit);
+
+        return new SearchResponseDTO(
+                variants.size(),
+                list.subList(fromIndex, toIndex),
+                fromIndex,
+                toIndex
+        );
+    }
+
+    private TravelVariant cloneTravelVariantAddingRoute(TravelVariant variant, Route route) {
         TravelVariant newVariant = new TravelVariant();
 
         List<Route> routes = new ArrayList<>(variant.getRoutes());

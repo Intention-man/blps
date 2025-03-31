@@ -6,7 +6,6 @@ import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -30,20 +28,38 @@ public class TicketController {
     }
 
     @GetMapping("/search_1_way_routes")
-    public ResponseEntity<SearchResponseDTO> searchSimpleRoutes1Way(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
-        SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, false);
+    public ResponseEntity<Object> searchSimpleRoutes1Way(
+            @RequestBody SimpleTravelSearchRequestDTO reqDto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        if (page < 0 || limit < 1){
+            return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
+        }
+        SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, false, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/search_round_trip_routes")
-    public ResponseEntity<SearchResponseDTO> searchSimpleRoutesRoundTrip(@RequestBody SimpleTravelSearchRequestDTO reqDto) {
-        SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, true);
+    public ResponseEntity<Object> searchSimpleRoutesRoundTrip(
+            @RequestBody SimpleTravelSearchRequestDTO reqDto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        if (page < 0 || limit < 1){
+            return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
+        }
+        SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, true, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/search_complex_routes")
-    public ResponseEntity<SearchResponseDTO> searchComplexRoots(@RequestBody ComplexTravelSearchRequestDTO reqDto) {
-        SearchResponseDTO response = ticketSearchService.searchComplexRoutes(reqDto);
+    public ResponseEntity<Object> searchComplexRoots(
+            @RequestBody ComplexTravelSearchRequestDTO reqDto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        if (page < 0 || limit < 1){
+            return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
+        }
+        SearchResponseDTO response = ticketSearchService.searchComplexRoutes(reqDto, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
