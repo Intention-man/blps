@@ -42,7 +42,7 @@ logging:
   level:
     org:
       hibernate:
-        SQL: DEBUG
+        SQL: WARN
         type:
           descriptor:
             sql:

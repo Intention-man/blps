@@ -18,19 +18,7 @@ public class HibernateConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan("com.example.prac.data.model");
-        sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
-    }
-
-    private Properties hibernateProperties() {
-        Properties properties = new Properties();
-        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-//        properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.format_sql", "true");
-        properties.put("hibernate.use_sql_comments", "true");
-        properties.put("hibernate.type.descriptor.sql.BasicBinder", "TRACE");
-        properties.put("org.hibernate.SQL", "DEBUG");
-        return properties;
     }
 
     @Bean

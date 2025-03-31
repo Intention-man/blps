@@ -6,11 +6,15 @@ import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -20,8 +24,8 @@ public class TicketController {
     private TicketService ticketService;
 
     @PostMapping("/generate")
-    public ResponseEntity<String> generateTickets() {
-        ticketService.generateAndSaveTickets();
+    public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        ticketService.generateAndSaveTickets(date);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -46,5 +50,12 @@ public class TicketController {
     @GetMapping("/all")
     public ResponseEntity<List<TicketDTO>> getTickets() {
         return new ResponseEntity<>(ticketService.getAllTicketDTOs(), HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<TicketDTO> getTicketById(@RequestParam Long id) {
+        return ticketService.getTicketById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

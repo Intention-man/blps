@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +25,7 @@ public class TicketService {
     private AirlineRepository airlineRepository;
     private TicketMapper ticketMapper;
 
-    public void generateAndSaveTickets() {
+    public void generateAndSaveTickets(LocalDate departureDate) {
         List<Ticket> tickets = new ArrayList<>();
         Random random = new Random();
 
@@ -53,7 +50,9 @@ public class TicketService {
                     String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
 
 //                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(2));
-                    LocalDate departureDate = LocalDate.of(2025, 3, 26).plusDays(random.nextInt(2));
+//                    LocalDate departureDate = LocalDate.of(2025, 3, 28).plusDays(random.nextInt(2));
+
+
                     LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
                     LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
 
@@ -95,6 +94,11 @@ public class TicketService {
         return tickets.stream()
                 .map(ticketMapper::mapTo)
                 .collect(Collectors.toList());
+    }
+
+    public Optional<TicketDTO> getTicketById(Long id) {
+        return ticketRepository.findById(id)
+                .map(ticketMapper::mapTo);
     }
 
     public double calculateTravelTimeInHours(Ticket ticket) {
