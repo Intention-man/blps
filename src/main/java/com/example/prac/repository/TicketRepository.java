@@ -73,6 +73,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             "AND t.arrivalCity = :arrivalCity " +
             "AND t.arrivalDate BETWEEN :arrivalDateStart AND :arrivalDateFinish " +
             "AND t.arrivalTime BETWEEN :arrivalTimeStart AND :arrivalTimeFinish " +
+            "AND t.departureDateTime >= :minDepartureStartDatetime " +
             "AND t.arrivalDateTime <= :maxArrivalFinishDatetime"
     )
     List<Ticket> findFinishTickets(
@@ -91,6 +92,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
             @Param("arrivalDateFinish") LocalDate arrivalDateFinish,
             @Param("arrivalTimeStart") LocalTime arrivalTimeStart,
             @Param("arrivalTimeFinish") LocalTime arrivalTimeFinish,
+            @Param("minDepartureStartDatetime") LocalDateTime minDepartureStartDatetime,
             @Param("maxArrivalFinishDatetime") LocalDateTime maxArrivalFinishDatetime
     );
 

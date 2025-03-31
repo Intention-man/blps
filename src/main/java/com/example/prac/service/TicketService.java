@@ -53,7 +53,7 @@ public class TicketService {
                     String flightNumber = String.format("%s%03d", airline.getName().substring(0, 2).toUpperCase(), random.nextInt(900) + 100);
 
 //                    LocalDate departureDate = LocalDate.now().plusDays(random.nextInt(2));
-                    LocalDate departureDate = LocalDate.of(2026, 3, 26).plusDays(random.nextInt(2));
+                    LocalDate departureDate = LocalDate.of(2025, 3, 26).plusDays(random.nextInt(2));
                     LocalTime departureTime = LocalTime.of(random.nextInt(24), random.nextInt(60));
                     LocalDateTime departureDateTime = LocalDateTime.of(departureDate, departureTime);
 
@@ -107,5 +107,9 @@ public class TicketService {
 
     public LocalTime max(LocalTime time1, LocalTime time2) {
         return time1.isAfter(time2) ? time1 : time2;
+    }
+
+    public LocalDateTime max(LocalDateTime dt1, LocalDateTime dt2) {
+        return dt1.isAfter(dt2) ? dt1 : dt2;
     }
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,18 +63,16 @@ public class ComplexTravelSearchRequestMapper implements Mapper<ComplexTravelSea
     public SimpleTravelSearchRequest mapToLeg(ComplexTravelSearchRequest req, int legIndex, TravelVariant variant) {
         ComplexRouteLeg leg = req.getComplexRouteLegs().get(legIndex);
 
-        LocalTime departureTimeStart;
-        if (legIndex == 0) {
-            departureTimeStart = leg.getDepartureTimeStart();
-        } else {
+        LocalDateTime minStartDatetime = LocalDateTime.of(leg.getDepartureDate(), leg.getDepartureTimeStart());
+        if (legIndex > 0) {
             List<Ticket> lastRouteLastTicket = variant.getRoutes().get(legIndex - 1).getTickets();
-            departureTimeStart = ticketService.max(
-                    lastRouteLastTicket.get(lastRouteLastTicket.size() - 1).getArrivalTime(),
-                    leg.getDepartureTimeStart());
-        }
+            Ticket last = lastRouteLastTicket.get(lastRouteLastTicket.size() - 1);
+            minStartDatetime = ticketService.max(minStartDatetime, last.getArrivalDateTime());
 
-        if (departureTimeStart.isAfter(leg.getDepartureTimeFinish()))
-            return null;
+            LocalDateTime maxStartDatetime = LocalDateTime.of(leg.getDepartureDate(), leg.getDepartureTimeFinish());
+            if (minStartDatetime.isAfter(maxStartDatetime))
+                return null;
+        }
 
         return SimpleTravelSearchRequest.builder()
                 .passengerCount(req.getPassengerCount())
@@ -86,12 +85,13 @@ public class ComplexTravelSearchRequestMapper implements Mapper<ComplexTravelSea
                 .arrivalCity(leg.getArrivalCity())
                 .departureDateStart(leg.getDepartureDate())
                 .departureDateFinish(leg.getDepartureDate())
-                .departureTimeStart(departureTimeStart)
+                .departureTimeStart(leg.getDepartureTimeStart())
                 .departureTimeFinish(leg.getDepartureTimeFinish())
                 .arrivalDateStart(leg.getDepartureDate())
                 .arrivalDateFinish(leg.getDepartureDate().plusDays(1))
                 .arrivalTimeStart(leg.getArrivalTimeStart())
                 .arrivalTimeFinish(leg.getArrivalTimeFinish())
+                .minStartDatetime(minStartDatetime)
                 .build();
     }
 }

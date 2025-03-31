@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -36,4 +37,6 @@ public class SimpleTravelSearchRequest {
     private LocalDate arrivalDateFinish;
     private LocalTime arrivalTimeStart;
     private LocalTime arrivalTimeFinish;
+
+    private LocalDateTime minStartDatetime;
 }

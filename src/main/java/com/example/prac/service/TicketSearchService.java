@@ -38,7 +38,7 @@ public class TicketSearchService {
         findAndSetSimpleRouteVariants(simpleReq0, simpleRoutes0);
 
         for (Route route : simpleRoutes0) {
-            TravelVariant variant = new TravelVariant(0, new ArrayList<>(List.of(route)));
+            TravelVariant variant = initVariantWithFirstRoot(route);
             variants.add(variant);
         }
 
@@ -142,6 +142,7 @@ public class TicketSearchService {
                     req.getArrivalDateFinish(),
                     req.getArrivalTimeStart(),
                     req.getArrivalTimeFinish(),
+                    lastTicket.getArrivalDateTime(),
                     route.getMaxFinishDatetime()
             );
 
@@ -216,6 +217,10 @@ public class TicketSearchService {
         list.add(ticket);
         updatedRoute.setTickets(list);
         return updatedRoute;
+    }
+
+    private TravelVariant initVariantWithFirstRoot(Route route) {
+        return new TravelVariant(route.getTotalPrice(), new ArrayList<>(List.of(route)));
     }
 
     private TravelVariant cloneTravelVariantAddingRoute(TravelVariant variant, Route route){

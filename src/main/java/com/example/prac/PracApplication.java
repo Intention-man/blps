@@ -10,8 +10,6 @@ public class PracApplication {
     }
 }
 
-
-// TODO поиск билетов для сложных маршрутов
 // TODO пагинация
 // TODO при выборе билета еще запрос, существует ли билет (просто getTicketById)
 // TODO свои Exception-ы (как в модели)
