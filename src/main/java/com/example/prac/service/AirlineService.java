@@ -1,6 +1,7 @@
 package com.example.prac.service;
 
 import com.example.prac.data.model.Airline;
+import com.example.prac.errorHandler.AirlineNotFoundException;
 import com.example.prac.repository.AirlineRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,6 @@ public class AirlineService {
 
     public Airline findByName(String name) {
         return airlineRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Airline not found: " + name));
+                .orElseThrow(() -> new AirlineNotFoundException("Авиакомпания не найдена: " + name));
     }
 }

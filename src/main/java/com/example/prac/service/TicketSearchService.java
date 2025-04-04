@@ -223,7 +223,7 @@ public class TicketSearchService {
 
     private SearchResponseDTO initResponse(List<TravelVariant> variants, int page, int limit) {
         List<TravelVariantDTO> list = variants.stream().map(travelVariantMapper::mapTo).toList();
-        int toIndex = Math.min((page + 1) * limit, list.size()) - 1;
+        int toIndex = Math.max(Math.min((page + 1) * limit, list.size()) - 1, 0);
         int fromIndex = Math.max(0, toIndex + 1 - limit);
 
         return new SearchResponseDTO(

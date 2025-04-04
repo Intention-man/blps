@@ -1,5 +1,6 @@
 package com.example.prac.data.req;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -8,23 +9,56 @@ import java.util.List;
 
 @Data
 public class SimpleTravelSearchRequestDTO {
+    @NotNull
+    @Min(1)
     private Integer passengerCount;
+
+    @NotBlank
     private String serviceClass;
+
+    @Min(0)
     private int maxPrice;
+
+    @Min(1)
     private int maxTravelTime;
+
+    @Min(1)
+    @Max(3)
     private int numberOfTransfers;
-    private List<String> availableAirlines;
+
+    @NotEmpty
+    private List<@NotBlank String> availableAirlines;
+
+    @NotBlank
     private String departureCity;
+
+    @NotBlank
     private String arrivalCity;
 
+    @NotNull
     private LocalDate departureDateStart;
+
+    @NotNull
     private LocalDate departureDateFinish;
+
+    @NotNull
     private LocalTime departureTimeStart;
+
+    @NotNull
     private LocalTime departureTimeFinish;
+
+    @NotNull
     private LocalDate arrivalDateStart;
+
+    @NotNull
     private LocalDate arrivalDateFinish;
+
+    @NotNull
     private LocalTime arrivalTimeStart;
+
+    @NotNull
     private LocalTime arrivalTimeFinish;
+
     private LocalDate backDepartureDateStart;
     private LocalDate backDepartureDateFinish;
     private LocalTime backDepartureTimeStart;

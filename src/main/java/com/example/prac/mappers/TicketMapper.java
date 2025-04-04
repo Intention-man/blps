@@ -35,8 +35,8 @@ public class TicketMapper implements Mapper<Ticket, TicketDTO> {
 
         Ticket ticket = modelMapper.map(ticketDTO, Ticket.class);
 
-        ticket.setDepartureCity(cityService.findOrCreateCity(ticketDTO.getDepartureCity()));
-        ticket.setArrivalCity(cityService.findOrCreateCity(ticketDTO.getArrivalCity()));
+        ticket.setDepartureCity(cityService.findByName(ticketDTO.getDepartureCity()));
+        ticket.setArrivalCity(cityService.findByName(ticketDTO.getArrivalCity()));
 
         return ticket;
     }

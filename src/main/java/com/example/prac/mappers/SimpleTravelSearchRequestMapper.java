@@ -4,8 +4,10 @@ import com.example.prac.data.model.Route;
 import com.example.prac.data.model.ServiceClass;
 import com.example.prac.data.model.SimpleTravelSearchRequest;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
+import com.example.prac.errorHandler.TravelDateTimeException;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
+import com.example.prac.service.DateTimeValidationService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearchRequest, SimpleTravelSearchRequestDTO> {
 
     private final ModelMapper modelMapper;
+
     private final CityService cityService;
     private final AirlineService airlineService;
 
@@ -55,6 +58,8 @@ public class SimpleTravelSearchRequestMapper implements Mapper<SimpleTravelSearc
     }
 
     public SimpleTravelSearchRequest mapFrom2(SimpleTravelSearchRequestDTO dto, Route route) {
+
+
         return SimpleTravelSearchRequest.builder()
                 .passengerCount(dto.getPassengerCount())
                 .serviceClass(ServiceClass.valueOf(dto.getServiceClass()))

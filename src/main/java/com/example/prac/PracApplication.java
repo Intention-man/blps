@@ -9,10 +9,3 @@ public class PracApplication {
         SpringApplication.run(PracApplication.class, args);
     }
 }
-
-// TODO пагинация
-// TODO свои Exception-ы (как в модели)
-// несуществующий город
-// дата, время, датавремя не соответствуют формату
-// возвращение раньше отправления
-// превышено максимальное количество перелетов

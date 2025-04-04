@@ -40,8 +40,8 @@ public class RouteMapper implements Mapper<Route, RouteDTO> {
         }
 
         Route route = modelMapper.map(dto, Route.class);
-        route.setDepartureCity(cityService.findOrCreateCity(dto.getDepartureCity()));
-        route.setArrivalCity(cityService.findOrCreateCity(dto.getArrivalCity()));
+        route.setDepartureCity(cityService.findByName(dto.getDepartureCity()));
+        route.setArrivalCity(cityService.findByName(dto.getArrivalCity()));
         route.setTickets(dto.getTickets()
                 .stream()
                 .map(ticketMapper::mapFrom)
