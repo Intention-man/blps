@@ -1,8 +1,6 @@
 package com.example.prac.mappers;
 
-import com.example.prac.data.model.ComplexTravelSearchRequest;
 import com.example.prac.data.model.Route;
-import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.data.res.RouteDTO;
 import com.example.prac.data.res.TravelVariantDTO;
 import lombok.AllArgsConstructor;

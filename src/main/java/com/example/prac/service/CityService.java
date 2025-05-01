@@ -13,7 +13,7 @@ import java.util.List;
 public class CityService {
     private final CityRepository cityRepository;
 
-    public City findByName(String cityName){
+    public City findByName(String cityName) {
         return cityRepository.findByName(cityName)
                 .orElseThrow(() -> new CityNotFoundException("Город не найден: " + cityName));
     }

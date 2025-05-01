@@ -1,7 +1,6 @@
 package com.example.prac.mappers;
 
 
-import com.example.prac.data.res.CityDTO;
 import com.example.prac.data.model.City;
 import com.example.prac.service.CityService;
 import lombok.AllArgsConstructor;

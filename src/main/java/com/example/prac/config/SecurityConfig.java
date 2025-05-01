@@ -3,7 +3,6 @@ package com.example.prac.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,10 +27,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/tickets/search_1_way_routes",
-                                        "/api/tickets/search_round_trip_routes", "/api/tickets/search_complex_routes", "/api/tickets",
-                                        "/api/auth/**").permitAll()
-                                .anyRequest().authenticated()
+                        .requestMatchers("/api/tickets/search_1_way_routes",
+                                "/api/tickets/search_round_trip_routes", "/api/tickets/search_complex_routes", "/api/tickets",
+                                "/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

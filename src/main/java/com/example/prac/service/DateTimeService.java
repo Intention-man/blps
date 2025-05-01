@@ -83,7 +83,7 @@ public class DateTimeService {
         }
     }
 
-    public void validate(ComplexTravelSearchRequestDTO dto){
+    public void validate(ComplexTravelSearchRequestDTO dto) {
         List<ComplexRouteLegDTO> complexRouteLegs = dto.getComplexRouteLegs();
         if (complexRouteLegs.size() > 6) {
             throw new ExceededMaxComplexRouteLegsException();
@@ -92,7 +92,7 @@ public class DateTimeService {
     }
 
     private void validate(List<ComplexRouteLegDTO> list) {
-        for (ComplexRouteLegDTO dto : list){
+        for (ComplexRouteLegDTO dto : list) {
             if (dto.getDepartureTimeStart() != null && dto.getDepartureTimeFinish() != null &&
                     dto.getDepartureTimeStart().isAfter(dto.getDepartureTimeFinish())) {
                 throw new TravelDateTimeException("Время начала отправления не может быть позже времени окончания.");
@@ -105,7 +105,7 @@ public class DateTimeService {
         }
 
         for (int i = 0; i < list.size() - 1; i++) {
-            if (list.get(i).getDepartureDate().isAfter(list.get(i + 1).getDepartureDate())){
+            if (list.get(i).getDepartureDate().isAfter(list.get(i + 1).getDepartureDate())) {
                 throw new TravelDateTimeException("Дата вылета не может быть позже даты вылета следующего этапа маршрута");
             }
         }

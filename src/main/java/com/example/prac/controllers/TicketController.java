@@ -1,9 +1,9 @@
 package com.example.prac.controllers;
 
-import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
-import com.example.prac.data.res.*;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.res.SearchResponseDTO;
+import com.example.prac.data.res.TicketDTO;
 import com.example.prac.service.DateTimeService;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
@@ -21,9 +21,9 @@ import java.util.List;
 @RequestMapping("/api/tickets")
 @AllArgsConstructor
 public class TicketController {
+    private final DateTimeService dateTimeService;
     private TicketSearchService ticketSearchService;
     private TicketService ticketService;
-    private final DateTimeService dateTimeService;
 
     @PostMapping("/generate")
     public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -42,7 +42,7 @@ public class TicketController {
             @Valid @RequestBody SimpleTravelSearchRequestDTO reqDto,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        if (page < 0 || limit < 1){
+        if (page < 0 || limit < 1) {
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
         dateTimeService.validate(reqDto);
@@ -55,7 +55,7 @@ public class TicketController {
             @Valid @RequestBody SimpleTravelSearchRequestDTO reqDto,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        if (page < 0 || limit < 1){
+        if (page < 0 || limit < 1) {
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
         dateTimeService.validate(reqDto);
@@ -68,7 +68,7 @@ public class TicketController {
             @Valid @RequestBody ComplexTravelSearchRequestDTO reqDto,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit) {
-        if (page < 0 || limit < 1){
+        if (page < 0 || limit < 1) {
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
         dateTimeService.validate(reqDto);

@@ -5,13 +5,11 @@ import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
 import com.example.prac.service.DateTimeService;
-import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

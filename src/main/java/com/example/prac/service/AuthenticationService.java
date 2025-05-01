@@ -34,7 +34,7 @@ public class AuthenticationService {
         }
 
         Role role;
-        if (request.getAdminCode() == null){
+        if (request.getAdminCode() == null) {
             role = Role.USER;
         } else if (request.getAdminCode().equals(jwtService.SECRET)) {
             role = Role.ADMIN;

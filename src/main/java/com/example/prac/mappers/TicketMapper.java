@@ -1,8 +1,8 @@
 package com.example.prac.mappers;
 
 import com.example.prac.data.model.ServiceClass;
-import com.example.prac.data.res.TicketDTO;
 import com.example.prac.data.model.Ticket;
+import com.example.prac.data.res.TicketDTO;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
 import lombok.AllArgsConstructor;
