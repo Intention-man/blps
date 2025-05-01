@@ -27,7 +27,7 @@ public class TicketSearchService {
     private TravelVariantMapper travelVariantMapper;
     private TicketRepository ticketRepository;
     private TicketService ticketService;
-    private RouteMapper routeMapper;
+    private DateTimeService dateTimeService;
 
     public SearchResponseDTO searchComplexRoutes(ComplexTravelSearchRequestDTO reqDto, int page, int limit) {
         int maxResCount = (page + 1) * limit;
@@ -122,7 +122,7 @@ public class TicketSearchService {
         Ticket lastTicket = route.getTickets().get(route.getTickets().size() - 1);
 
         if (leftNumberOfTransfers == 1) {
-            LocalDate departureDateStart = ticketService.max(lastTicket.getArrivalDate(), req.getArrivalDateStart());
+            LocalDate departureDateStart = dateTimeService.max(lastTicket.getArrivalDate(), req.getArrivalDateStart());
 
             List<Ticket> nextTicketCandidates = ticketRepository.findFinishTickets(
                     req.getServiceClass(),
@@ -222,16 +222,9 @@ public class TicketSearchService {
     }
 
     private SearchResponseDTO initResponse(List<TravelVariant> variants, int page, int limit) {
-        List<TravelVariantDTO> list = variants.stream().map(travelVariantMapper::mapTo).toList();
-        int toIndex = Math.max(Math.min((page + 1) * limit, list.size()) - 1, 0);
-        int fromIndex = Math.max(0, toIndex + 1 - limit);
-
-        return new SearchResponseDTO(
-                variants.size(),
-                list.subList(fromIndex, toIndex),
-                fromIndex,
-                toIndex
-        );
+        List<TravelVariantDTO> list = ticketService.sublistByPageAndLimit(variants, page, limit)
+                .stream().map(travelVariantMapper::mapTo).toList();
+        return new SearchResponseDTO(list.size(), list);
     }
 
     private TravelVariant cloneTravelVariantAddingRoute(TravelVariant variant, Route route) {

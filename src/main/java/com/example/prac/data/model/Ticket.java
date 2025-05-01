@@ -1,6 +1,7 @@
 package com.example.prac.data.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,6 +16,8 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 public class Ticket {
+    public static final int MAX_FLIGHT_DURATION = 15;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_id", nullable = false)
@@ -64,5 +67,6 @@ public class Ticket {
     private LocalDateTime arrivalDateTime;
 
     @Column(name = "hours", nullable = false)
+    @Max(MAX_FLIGHT_DURATION)
     private double hours;
 }

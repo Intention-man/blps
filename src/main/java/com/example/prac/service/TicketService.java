@@ -5,12 +5,16 @@ import com.example.prac.data.model.City;
 import com.example.prac.data.model.ServiceClass;
 import com.example.prac.data.model.Ticket;
 import com.example.prac.data.res.TicketDTO;
+import com.example.prac.errorHandler.CityNotFoundException;
+import com.example.prac.errorHandler.InvalidTicket;
 import com.example.prac.mappers.TicketMapper;
 import com.example.prac.repository.AirlineRepository;
 import com.example.prac.repository.TicketRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,6 +28,34 @@ public class TicketService {
     private CityService cityService;
     private AirlineRepository airlineRepository;
     private TicketMapper ticketMapper;
+
+    @Transactional
+    public void addTickets(List<TicketDTO> ticketsDTO) {
+        List<Ticket> newTickets = new ArrayList<>();
+
+        int i = 0;
+        for (TicketDTO ticketDTO : ticketsDTO) {
+            try {
+                cityService.findByName(ticketDTO.getDepartureCity());
+            } catch (CityNotFoundException e) {
+                cityService.save(ticketDTO.getDepartureCity());
+            }
+            try {
+                cityService.findByName(ticketDTO.getArrivalCity());
+            } catch (CityNotFoundException e) {
+                cityService.save(ticketDTO.getArrivalCity());
+            }
+
+            if (!isValid(ticketDTO)) {
+                throw new InvalidTicket("Невалидный билет №" + i);
+            }
+
+            newTickets.add(ticketMapper.mapFrom(ticketDTO));
+            i++;
+        }
+
+        ticketRepository.saveAll(newTickets);
+    }
 
     public void generateAndSaveTickets(LocalDate departureDate) {
         List<Ticket> tickets = new ArrayList<>();
@@ -89,9 +121,10 @@ public class TicketService {
         ticketRepository.saveAll(tickets);
     }
 
-    public List<TicketDTO> getAllTicketDTOs() {
+    public List<TicketDTO> getAllTicketDTOs(int page, int limit) {
         List<Ticket> tickets = ticketRepository.findAll();
-        return tickets.stream()
+        return sublistByPageAndLimit(tickets, page, limit)
+                .stream()
                 .map(ticketMapper::mapTo)
                 .collect(Collectors.toList());
     }
@@ -101,19 +134,34 @@ public class TicketService {
                 .map(ticketMapper::mapTo);
     }
 
+    public <T> List<T> sublistByPageAndLimit(List<T> list, int page, int limit){
+        int toIndex = Math.max(Math.min((page + 1) * limit, list.size()) - 1, 0);
+        int fromIndex = Math.max(0, toIndex + 1 - limit);
+        return list.subList(fromIndex, toIndex);
+    }
+
+    public boolean isValid(TicketDTO ticketDTO) {
+        if (ticketDTO.getPrice() <= 0) return false;
+        if (ticketDTO.getAvailableSeats() <= 0) return false;
+        if (ticketDTO.getDepartureCity().equals(ticketDTO.getArrivalCity())) return false;
+
+        LocalDateTime departureDateTime = LocalDateTime.of(ticketDTO.getDepartureDate(), ticketDTO.getDepartureTime());
+        LocalDateTime arrivalDateTime = LocalDateTime.of(ticketDTO.getArrivalDate(), ticketDTO.getArrivalTime());
+        if (departureDateTime.isAfter(arrivalDateTime)) return false;
+
+        double duration = calculateTravelTimeInHours(departureDateTime, arrivalDateTime);
+        if (duration > Ticket.MAX_FLIGHT_DURATION) return false;
+        if (ticketDTO.getHours() > 0 && Math.abs(ticketDTO.getHours() - duration) > 1) return false;
+
+        ticketDTO.setHours(duration);
+        return true;
+    }
+
     public double calculateTravelTimeInHours(Ticket ticket) {
-        return java.time.Duration.between(ticket.getDepartureDateTime(), ticket.getArrivalDateTime()).toMinutes() / 60.0;
+        return calculateTravelTimeInHours(ticket.getDepartureDateTime(), ticket.getArrivalDateTime());
     }
 
-    public LocalDate max(LocalDate date1, LocalDate date2) {
-        return date1.isAfter(date2) ? date1 : date2;
-    }
-
-    public LocalTime max(LocalTime time1, LocalTime time2) {
-        return time1.isAfter(time2) ? time1 : time2;
-    }
-
-    public LocalDateTime max(LocalDateTime dt1, LocalDateTime dt2) {
-        return dt1.isAfter(dt2) ? dt1 : dt2;
+    public double calculateTravelTimeInHours(LocalDateTime departureDateTime, LocalDateTime arrivalDateTime) {
+        return java.time.Duration.between(departureDateTime, arrivalDateTime).toMinutes() / 60.0;
     }
 }

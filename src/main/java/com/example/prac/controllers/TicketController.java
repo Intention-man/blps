@@ -1,9 +1,10 @@
 package com.example.prac.controllers;
 
+import com.example.prac.data.model.Ticket;
 import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.data.res.*;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
-import com.example.prac.service.DateTimeValidationService;
+import com.example.prac.service.DateTimeService;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import jakarta.validation.Valid;
@@ -22,11 +23,17 @@ import java.util.List;
 public class TicketController {
     private TicketSearchService ticketSearchService;
     private TicketService ticketService;
-    private final DateTimeValidationService dateTimeValidationService;
+    private final DateTimeService dateTimeService;
 
     @PostMapping("/generate")
     public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         ticketService.generateAndSaveTickets(date);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> addTickets(@Valid @RequestBody List<TicketDTO> ticketsDto) {
+        ticketService.addTickets(ticketsDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -38,7 +45,7 @@ public class TicketController {
         if (page < 0 || limit < 1){
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
-        dateTimeValidationService.validate(reqDto);
+        dateTimeService.validate(reqDto);
         SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, false, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -51,7 +58,7 @@ public class TicketController {
         if (page < 0 || limit < 1){
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
-        dateTimeValidationService.validate(reqDto);
+        dateTimeService.validate(reqDto);
         SearchResponseDTO response = ticketSearchService.searchSimpleRoutes(reqDto, true, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -64,15 +71,16 @@ public class TicketController {
         if (page < 0 || limit < 1){
             return new ResponseEntity<>("page should by >= 0 and limit should be > 0", HttpStatus.BAD_REQUEST);
         }
-        dateTimeValidationService.validate(reqDto);
+        dateTimeService.validate(reqDto);
 
         SearchResponseDTO response = ticketSearchService.searchComplexRoutes(reqDto, page, limit);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<TicketDTO>> getTickets() {
-        return new ResponseEntity<>(ticketService.getAllTicketDTOs(), HttpStatus.OK);
+    public ResponseEntity<List<TicketDTO>> getTickets(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "10") int limit) {
+        return new ResponseEntity<>(ticketService.getAllTicketDTOs(page, limit), HttpStatus.OK);
     }
 
     @GetMapping("")

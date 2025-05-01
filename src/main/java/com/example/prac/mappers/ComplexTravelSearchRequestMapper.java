@@ -4,6 +4,7 @@ import com.example.prac.data.model.*;
 import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.service.AirlineService;
 import com.example.prac.service.CityService;
+import com.example.prac.service.DateTimeService;
 import com.example.prac.service.TicketService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,7 +21,7 @@ public class ComplexTravelSearchRequestMapper implements Mapper<ComplexTravelSea
     private final ModelMapper modelMapper;
     private final CityService cityService;
     private final AirlineService airlineService;
-    private TicketService ticketService;
+    private DateTimeService dateTimeService;
 
     public ComplexTravelSearchRequestDTO mapTo(ComplexTravelSearchRequest req) {
         if (req == null) {
@@ -67,7 +68,7 @@ public class ComplexTravelSearchRequestMapper implements Mapper<ComplexTravelSea
         if (legIndex > 0) {
             List<Ticket> lastRouteLastTicket = variant.getRoutes().get(legIndex - 1).getTickets();
             Ticket last = lastRouteLastTicket.get(lastRouteLastTicket.size() - 1);
-            minStartDatetime = ticketService.max(minStartDatetime, last.getArrivalDateTime());
+            minStartDatetime = dateTimeService.max(minStartDatetime, last.getArrivalDateTime());
 
             LocalDateTime maxStartDatetime = LocalDateTime.of(leg.getDepartureDate(), leg.getDepartureTimeFinish());
             if (minStartDatetime.isAfter(maxStartDatetime))

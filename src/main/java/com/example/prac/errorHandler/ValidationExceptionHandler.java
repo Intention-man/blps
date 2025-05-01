@@ -1,7 +1,5 @@
-package com.example.prac.config;
+package com.example.prac.errorHandler;
 
-import com.example.prac.errorHandler.*;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -57,6 +55,16 @@ public class ValidationExceptionHandler {
 
     @ExceptionHandler(ExceededMaxComplexRouteLegsException.class)
     public ResponseEntity<String> handleExceededMaxTransfersException(ExceededMaxComplexRouteLegsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectAdminCode.class)
+    public ResponseEntity<String> handleIncorrectAdminCode(IncorrectAdminCode ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidTicket.class)
+    public ResponseEntity<String> handleInvalidTicket(InvalidTicket ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 

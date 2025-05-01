@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 public class HibernateConfig {
@@ -17,7 +16,7 @@ public class HibernateConfig {
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-        sessionFactory.setPackagesToScan("com.example.prac.data.model");
+        sessionFactory.setPackagesToScan("com.example.prac.data");
         return sessionFactory;
     }
 

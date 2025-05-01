@@ -17,4 +17,9 @@ public class SearchResponseDTO {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
     }
+
+    public SearchResponseDTO(int size, List<TravelVariantDTO> travelVariantDTOStream) {
+        this.variantsCount = size;
+        this.variants = travelVariantDTOStream;
+    }
 }

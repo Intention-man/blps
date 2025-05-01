@@ -8,12 +8,13 @@ import com.example.prac.errorHandler.TravelDateTimeException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DateTimeValidationService {
+public class DateTimeService {
 
     public void validate(SimpleTravelSearchRequestDTO dto) {
         // Основной маршрут
@@ -90,7 +91,7 @@ public class DateTimeValidationService {
         validate(complexRouteLegs);
     }
 
-    public void validate(List<ComplexRouteLegDTO> list) {
+    private void validate(List<ComplexRouteLegDTO> list) {
         for (ComplexRouteLegDTO dto : list){
             if (dto.getDepartureTimeStart() != null && dto.getDepartureTimeFinish() != null &&
                     dto.getDepartureTimeStart().isAfter(dto.getDepartureTimeFinish())) {
@@ -109,5 +110,13 @@ public class DateTimeValidationService {
             }
         }
 
+    }
+
+    public LocalDate max(LocalDate date1, LocalDate date2) {
+        return date1.isAfter(date2) ? date1 : date2;
+    }
+
+    public LocalDateTime max(LocalDateTime dt1, LocalDateTime dt2) {
+        return dt1.isAfter(dt2) ? dt1 : dt2;
     }
 }
