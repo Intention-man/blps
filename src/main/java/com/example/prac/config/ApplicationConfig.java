@@ -1,9 +1,10 @@
 package com.example.prac.config;
 
-import com.example.prac.repository.UserRepository;
+import com.example.prac.service.UserXmlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,11 +24,17 @@ import java.security.NoSuchAlgorithmException;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UserRepository userRepository;
+    private final UserXmlService userXmlService;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        return username -> {
+            try {
+                return userXmlService.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+            } catch (JAXBException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     @Bean

@@ -58,14 +58,19 @@ public class ValidationExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidTicket.class)
+    public ResponseEntity<String> handleInvalidTicket(InvalidTicket ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
     @ExceptionHandler(IncorrectAdminCode.class)
     public ResponseEntity<String> handleIncorrectAdminCode(IncorrectAdminCode ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidTicket.class)
-    public ResponseEntity<String> handleInvalidTicket(InvalidTicket ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExistsException(UserAlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
