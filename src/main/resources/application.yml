@@ -1,12 +1,14 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    #    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/mydatabase}
-    #    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    #    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+
+    #    local
+#    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/studs}
+#    username: ${SPRING_DATASOURCE_USERNAME:s367044}
+#    password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
 
     #    for helios
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/studs}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/studs}
     username: ${SPRING_DATASOURCE_USERNAME:s367044}
     password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
 

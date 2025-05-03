@@ -9,23 +9,29 @@ import jakarta.xml.bind.Unmarshaller;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserXmlService {
-    private final String XML_FILE_PATH = "/Users/mihailagei/Documents/ITMO/TPO/blps/src/main/resources/users.xml";
+    private final String XML_FILE_PATH = "./users.xml";
 
     public List<User> loadUsers() throws JAXBException {
-        File file = new File(XML_FILE_PATH);
-        if (!file.exists()) {
-            return new ArrayList<>();
+        try (InputStream inputStream = getClass().getResourceAsStream("/users.xml")) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Файл не найден: /users.xml");
+            }
+
+            JAXBContext context = JAXBContext.newInstance(Users.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            Users users = (Users) unmarshaller.unmarshal(inputStream);
+            return users.getUsers();
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка доступа к XML", e);
         }
-        JAXBContext context = JAXBContext.newInstance(Users.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        Users users = (Users) unmarshaller.unmarshal(file);
-        return users.getUsers();
     }
 
     public void saveUsers(List<User> users) throws JAXBException {
