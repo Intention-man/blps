@@ -7,8 +7,10 @@ import com.example.prac.errorHandler.UserAlreadyExistsException;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.jaas.JaasAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +24,8 @@ public class AuthenticationService {
     private final UserXmlService userXmlService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
+//    private final AuthenticationManager authenticationManager;
+    private final AuthenticationProvider jaasAuthenticationProvider;
     private final UserDetailsService userDetailsService;
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -60,7 +63,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
-            authenticationManager.authenticate(
+            jaasAuthenticationProvider.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()

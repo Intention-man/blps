@@ -33,12 +33,20 @@ spring:
       mode: always
 
 
+  security:
+    jaas:
+      enabled: true
+      app-name: XmlAuth
+      login-config: classpath:jaas.config
+      login-module: com.example.prac.config.XmlLoginModule
+      control-flag: REQUIRED
+    user:
+      password:
+        encode: false
 
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        type: debug
+  application:
+    jvm-args: -Djava.security.auth.login.config=classpath:jaas.config
+
 
 logging:
   level:
