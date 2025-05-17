@@ -15,10 +15,8 @@ public class TicketDTO {
     private String departureCity;
     private LocalDate departureDate;
     private LocalTime departureTime;
-    //    private LocalDateTime departureDateTime;
     private String arrivalCity;
     private LocalDate arrivalDate;
     private LocalTime arrivalTime;
-    //    private LocalDateTime arrivalDateTime;
     private double hours;
 }

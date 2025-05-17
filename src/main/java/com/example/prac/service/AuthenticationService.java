@@ -24,7 +24,6 @@ public class AuthenticationService {
     private final UserXmlService userXmlService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-//    private final AuthenticationManager authenticationManager;
     private final AuthenticationProvider jaasAuthenticationProvider;
     private final UserDetailsService userDetailsService;
 

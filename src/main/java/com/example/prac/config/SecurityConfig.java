@@ -95,5 +95,4 @@ public class SecurityConfig {
         provider.setAuthorityGranters(new AuthorityGranter[]{new JaasAuthorityGranter(userXmlService)});
         return provider;
     }
-
 }
