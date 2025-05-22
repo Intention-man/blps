@@ -1,0 +1,23 @@
+server:
+  port: 18124
+
+spring:
+  application:
+    name: aviasales-worker-node-1
+  jms:
+    listener:
+      auto-startup: true
+
+atomikos: # Новые свойства для конфигурации Atomikos
+  log:
+    dir: ./transaction_logs/worker_node_1/ # Уникальный каталог для логов
+  tm:
+    unique:
+      name: aviasalesWorkerNode1Tm # Уникальное имя TM
+  xa:
+    db:
+      user: s367044
+      password: rkemWfU26OYiwbkD
+      serverName: localhost
+      portNumber: "25432"
+      databaseName: studs

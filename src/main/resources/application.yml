@@ -1,18 +1,23 @@
 spring:
-  datasource:
+  application:
+    name: blps # Имя приложения, полезно для логов и управления
+    # jvm-args: -Djava.security.auth.login.config=classpath:jaas.config # Это лучше указывать при запуске JVM, здесь может не сработать надежно.
+
+  datasource: # Общие настройки БД для всех узлов
     driver-class-name: org.postgresql.Driver
 
     #    local
-#    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/studs}
-#    username: ${SPRING_DATASOURCE_USERNAME:s367044}
-#    password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
+    #    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:25432/studs}
+    #    username: ${SPRING_DATASOURCE_USERNAME:s367044}
+    #    password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
 
     #    for helios
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/studs}
     username: ${SPRING_DATASOURCE_USERNAME:s367044}
     password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
+    # Если нужна XA-конфигурация для Atomikos, она будет здесь или в отдельном конфигурационном классе
 
-  jpa:
+  jpa: # Общие настройки JPA
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -20,43 +25,56 @@ spring:
           lob:
             non_contextual_creation: true
         format_sql: true
-        #        show-sql: true
         use_sql_comments: true
         default_schema: public
-    generate-ddl: true
+        # Для Atomikos и JTA:
+        # transaction.jta.platform: com.example.prac.config.AtomikosJtaPlatform # Если используешь AtomikosJtaPlatform
+    # generate-ddl: true # Часто в `validate` или `update` на проде, `create-drop` для тестов
     hibernate:
-      ddl-auto: validate
+      ddl-auto: validate # или update. Для продакшена лучше validate или none и использовать Flyway/Liquibase
     show-sql: true
 
-  sql:
-    init:
-      mode: always
+  # sql: # Если используешь schema.sql/data.sql
+  #   init:
+  #     mode: always # Для разработки, для продакшена - never или embedded
 
-
-  security:
+  security: # Общие настройки безопасности, включая JAAS
     jaas:
       enabled: true
-      app-name: XmlAuth
-      login-config: classpath:jaas.config
-      login-module: com.example.prac.config.XmlLoginModule
-      control-flag: REQUIRED
+      app-name: XmlAuth # Это имя должно совпадать с именем контекста в jaas.config
+      # login-config: classpath:jaas.config # Это JVM property, лучше задавать при запуске
+      # login-module: com.example.prac.config.XmlLoginModule # Это не стандартный Spring Boot property. LoginModule указывается в jaas.config
+      # control-flag: REQUIRED # Тоже в jaas.config
     user:
       password:
-        encode: false
+        encode: false # Оставляем, если пароли в XML не хешированы
 
-  application:
-    jvm-args: -Djava.security.auth.login.config=classpath:jaas.config
+  activemq: # Общие настройки ActiveMQ
+    broker-url-amqp: amqp://localhost:5672 # Для AMQP продюсера
+    broker-url: tcp://localhost:61616 # Для JMS слушателя по умолчанию (OpenWire), если он не использует кастомную AMQP фабрику
+    user: admin
+    password: admin
+    # Можно добавить настройки пула, если используешь PooledConnectionFactory
+    # pool:
+    #   enabled: true
+    #   max-connections: 10
 
+  jms: # Общие настройки JMS
+    listener:
+      acknowledge-mode: auto # Или client, dups_ok
+      auto-startup: true # По умолчанию слушатели запускаются. Можно переопределить в профилях.
+    # template: # Настройки для JmsTemplate по умолчанию, если он не кастомный
+    #   default-destination:
+    #   delivery-mode: persistent
 
-logging:
+logging: # Общие настройки логирования
   level:
     org:
       hibernate:
-        SQL: WARN
+        SQL: WARN # Было WARN, может INFO для отладки SQL, TRACE для параметров
         type:
           descriptor:
             sql:
-              BasicBinder: TRACE
+              BasicBinder: TRACE # Оставляем для отладки параметров
+    com.example.prac: DEBUG # Логирование твоего приложения
 
-server:
-  port: 18123

@@ -2,10 +2,11 @@ package com.example.prac.data.res;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class SearchResponseDTO {
+public class SearchResponseDTO implements Serializable {
     private int variantsCount;
     private int startIndex;
     private int endIndex;

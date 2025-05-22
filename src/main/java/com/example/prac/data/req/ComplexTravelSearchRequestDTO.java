@@ -4,10 +4,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class ComplexTravelSearchRequestDTO {
+public class ComplexTravelSearchRequestDTO implements Serializable {
     @NotNull
     @Min(1)
     private Integer passengerCount;

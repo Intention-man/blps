@@ -1,0 +1,23 @@
+server:
+  port: 18123
+
+spring:
+  application:
+    name: aviasales-api-node
+  jms:
+    listener:
+      auto-startup: false
+
+atomikos:
+  log:
+    dir: ./transaction_logs/api_node/
+  tm:
+    unique:
+      name: aviasalesApiNodeTm
+  xa:
+    db:
+      user: s367044
+      password: rkemWfU26OYiwbkD
+      serverName: localhost
+      portNumber: "25432"
+      databaseName: studs

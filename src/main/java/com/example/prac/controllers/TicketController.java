@@ -2,13 +2,14 @@ package com.example.prac.controllers;
 
 import com.example.prac.data.req.ComplexTravelSearchRequestDTO;
 import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
+import com.example.prac.data.res.AsyncJobResponse;
 import com.example.prac.data.res.SearchResponseDTO;
 import com.example.prac.data.res.TicketDTO;
+import com.example.prac.messaging.dto.*;
 import com.example.prac.service.DateTimeService;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,27 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jms.core.JmsTemplate;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/tickets")
-@AllArgsConstructor
+//@AllArgsConstructor
 public class TicketController {
     private final DateTimeService dateTimeService;
-    private TicketSearchService ticketSearchService;
-    private TicketService ticketService;
+    private final TicketSearchService ticketSearchService;
+    private final TicketService ticketService;
+    private final JmsTemplate amqpJmsTemplate;
+
+    public TicketController(DateTimeService dateTimeService, TicketSearchService ticketSearchService,
+                            TicketService ticketService, @Qualifier("amqpJmsTemplate") JmsTemplate amqpJmsTemplate) {
+        this.dateTimeService = dateTimeService;
+        this.ticketSearchService = ticketSearchService;
+        this.ticketService = ticketService;
+        this.amqpJmsTemplate = amqpJmsTemplate;
+    }
+
 
     @PostMapping("/generate")
     public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
@@ -35,6 +50,18 @@ public class TicketController {
     public ResponseEntity<String> addTickets(@Valid @RequestBody List<TicketDTO> ticketsDto) {
         ticketService.addTickets(ticketsDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/add_async")
+    public ResponseEntity<AsyncJobResponse> addTicketsAsync(@Valid @RequestBody List<TicketDTO> ticketsDto) {
+        if (ticketsDto == null || ticketsDto.isEmpty()) {
+            return ResponseEntity.badRequest().body(new AsyncJobResponse(null, "EMPTY_REQUEST", "Ticket list cannot be empty"));
+        }
+        String jobId = UUID.randomUUID().toString();
+        TicketAdditionRequestMessage message = new TicketAdditionRequestMessage(jobId, ticketsDto);
+        amqpJmsTemplate.convertAndSend("ticket.addition.requests.queue", message);
+        // Можно сохранить jobId и статус PENDING локально или в Redis
+        return ResponseEntity.accepted().body(new AsyncJobResponse(jobId, "PROCESSING", null));
     }
 
     @GetMapping("/search_1_way_routes")

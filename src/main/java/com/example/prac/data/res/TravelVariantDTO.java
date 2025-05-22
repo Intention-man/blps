@@ -2,10 +2,11 @@ package com.example.prac.data.res;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class TravelVariantDTO {
+public class TravelVariantDTO implements Serializable {
     private int totalPrice;
     private List<RouteDTO> routes;
 

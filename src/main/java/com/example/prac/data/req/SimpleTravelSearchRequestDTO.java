@@ -3,12 +3,13 @@ package com.example.prac.data.req;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @Data
-public class SimpleTravelSearchRequestDTO {
+public class SimpleTravelSearchRequestDTO implements Serializable {
     @NotNull
     @Min(1)
     private Integer passengerCount;

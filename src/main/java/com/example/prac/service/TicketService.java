@@ -59,6 +59,10 @@ public class TicketService {
         ticketRepository.saveAll(newTickets);
     }
 
+    public void saveTickets(List<TicketDTO> ticketsDTO) {
+        ticketRepository.saveAll(ticketsDTO.stream().map(ticketMapper::mapFrom).collect(Collectors.toList()));
+    }
+
     public void generateAndSaveTickets(LocalDate departureDate) {
         List<Ticket> tickets = new ArrayList<>();
         Random random = new Random();
