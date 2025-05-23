@@ -5,11 +5,13 @@ import com.example.prac.data.req.SimpleTravelSearchRequestDTO;
 import com.example.prac.data.res.AsyncJobResponse;
 import com.example.prac.data.res.SearchResponseDTO;
 import com.example.prac.data.res.TicketDTO;
+import com.example.prac.messaging.api_node.TicketAdditionApiNodeService;
 import com.example.prac.messaging.dto.*;
 import com.example.prac.service.DateTimeService;
 import com.example.prac.service.TicketSearchService;
 import com.example.prac.service.TicketService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +26,23 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/tickets")
-//@AllArgsConstructor
+@AllArgsConstructor
 public class TicketController {
     private final DateTimeService dateTimeService;
     private final TicketSearchService ticketSearchService;
     private final TicketService ticketService;
-    private final JmsTemplate amqpJmsTemplate;
+    private final TicketAdditionApiNodeService ticketAdditionApiNodeService;
 
-    public TicketController(DateTimeService dateTimeService, TicketSearchService ticketSearchService,
-                            TicketService ticketService, @Qualifier("amqpJmsTemplate") JmsTemplate amqpJmsTemplate) {
-        this.dateTimeService = dateTimeService;
-        this.ticketSearchService = ticketSearchService;
-        this.ticketService = ticketService;
-        this.amqpJmsTemplate = amqpJmsTemplate;
+    @PostMapping("/add_async")
+    public ResponseEntity<AsyncJobResponse> addTicketsAsync(@Valid @RequestBody List<TicketDTO> ticketsDto) {
+        if (ticketsDto == null || ticketsDto.isEmpty()) {
+            return ResponseEntity.badRequest().body(new AsyncJobResponse(null, "EMPTY_REQUEST", "Ticket list cannot be empty"));
+        }
+        String jobId = ticketAdditionApiNodeService.storeAndSend(ticketsDto);
+        return ResponseEntity.accepted().body(new AsyncJobResponse(jobId, "PROCESSING", null));
     }
 
-
-    @PostMapping("/generate")
-    public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        ticketService.generateAndSaveTickets(date);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    // TODO запрос на добавление билетов с ручной проверкой заявок
 
     @PostMapping("/add")
     public ResponseEntity<String> addTickets(@Valid @RequestBody List<TicketDTO> ticketsDto) {
@@ -52,17 +50,6 @@ public class TicketController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/add_async")
-    public ResponseEntity<AsyncJobResponse> addTicketsAsync(@Valid @RequestBody List<TicketDTO> ticketsDto) {
-        if (ticketsDto == null || ticketsDto.isEmpty()) {
-            return ResponseEntity.badRequest().body(new AsyncJobResponse(null, "EMPTY_REQUEST", "Ticket list cannot be empty"));
-        }
-        String jobId = UUID.randomUUID().toString();
-        TicketAdditionRequestMessage message = new TicketAdditionRequestMessage(jobId, ticketsDto);
-        amqpJmsTemplate.convertAndSend("ticket.addition.requests.queue", message);
-        // Можно сохранить jobId и статус PENDING локально или в Redis
-        return ResponseEntity.accepted().body(new AsyncJobResponse(jobId, "PROCESSING", null));
-    }
 
     @GetMapping("/search_1_way_routes")
     public ResponseEntity<Object> searchSimpleRoutes1Way(
@@ -115,5 +102,11 @@ public class TicketController {
         return ticketService.getTicketById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<String> generateTickets(@RequestParam(name = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        ticketService.generateAndSaveTickets(date);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

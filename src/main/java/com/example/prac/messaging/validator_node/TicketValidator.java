@@ -2,6 +2,7 @@ package com.example.prac.messaging.validator_node;
 
 import com.example.prac.data.model.Ticket;
 import com.example.prac.data.res.TicketDTO;
+import com.example.prac.messaging.dto.ValidationResult;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,6 @@ public class TicketValidator {
         if (duration > Ticket.MAX_FLIGHT_DURATION) return new ValidationResult(false, "duration must be less than or equal to " + Ticket.MAX_FLIGHT_DURATION + " hours");
         if (ticketDTO.getHours() > 0 && Math.abs(ticketDTO.getHours() - duration) > 1) return new ValidationResult(false, "Incorrect data");
 
-        return new ValidationResult(true, null);
+        return new ValidationResult(true, "OK");
     }
 }

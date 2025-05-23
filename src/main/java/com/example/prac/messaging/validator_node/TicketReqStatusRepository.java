@@ -7,6 +7,5 @@ import java.util.List;
 
 @Repository
 public interface TicketReqStatusRepository extends JpaRepository<TicketReqStatus, Long> {
-    List<TicketReqStatus> findByJobIdAndTicketRefId(String jobId, String ticketRefId);
     List<TicketReqStatus> findByJobId(String jobId);
 }

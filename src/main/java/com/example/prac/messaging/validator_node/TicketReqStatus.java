@@ -18,7 +18,7 @@ public class TicketReqStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String jobId;
-    private String ticketRefId; // Может быть originalIndex + jobId
+    private String ticketRefId;
     @Enumerated(EnumType.STRING)
     private TicketValidationStatus status;
     @Column(columnDefinition = "TEXT")

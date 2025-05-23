@@ -28,7 +28,7 @@ import java.util.Properties;
 @EnableJpaRepositories(
         basePackages = {
                 "com.example.prac.repository",
-                "com.example.prac.messaging.validator_node"
+                "com.example.prac.messaging"
         },
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager"
