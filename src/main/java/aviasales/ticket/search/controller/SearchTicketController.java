@@ -1,17 +1,17 @@
 package aviasales.ticket.search.controller;
 
+import aviasales.common.data.dto.TicketDTO;
+import aviasales.common.service.TicketService;
+import aviasales.ticket.search.data.dto.ComplexTravelSearchRequestDTO;
+import aviasales.ticket.search.data.dto.SearchResponseDTO;
+import aviasales.ticket.search.data.dto.SimpleTravelSearchRequestDTO;
+import aviasales.ticket.search.service.DateTimeService;
+import aviasales.ticket.search.service.TicketSearchService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import aviasales.ticket.search.data.dto.ComplexTravelSearchRequestDTO;
-import aviasales.ticket.search.data.dto.SimpleTravelSearchRequestDTO;
-import aviasales.ticket.search.data.dto.SearchResponseDTO;
-import aviasales.common.data.dto.TicketDTO;
-import aviasales.ticket.search.service.DateTimeService;
-import aviasales.ticket.search.service.TicketSearchService;
-import aviasales.common.service.TicketService;
 
 import java.util.List;
 

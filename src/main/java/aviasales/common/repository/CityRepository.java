@@ -1,8 +1,8 @@
 package aviasales.common.repository;
 
+import aviasales.common.data.entity.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import aviasales.common.data.entity.City;
 
 import java.util.Optional;
 

@@ -1,12 +1,12 @@
 package aviasales.ticket.search.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import aviasales.common.errorHandler.ExceededMaxComplexRouteLegsException;
+import aviasales.common.errorHandler.TravelDateTimeException;
 import aviasales.ticket.search.data.dto.ComplexRouteLegDTO;
 import aviasales.ticket.search.data.dto.ComplexTravelSearchRequestDTO;
 import aviasales.ticket.search.data.dto.SimpleTravelSearchRequestDTO;
-import aviasales.common.errorHandler.ExceededMaxComplexRouteLegsException;
-import aviasales.common.errorHandler.TravelDateTimeException;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

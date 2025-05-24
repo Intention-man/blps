@@ -1,8 +1,8 @@
 package aviasales.ticket.management.data.dto;
 
+import aviasales.common.data.dto.TicketDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import aviasales.common.data.dto.TicketDTO;
 
 import java.util.List;
 

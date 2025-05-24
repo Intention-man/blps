@@ -1,10 +1,10 @@
 package aviasales.common.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import aviasales.common.data.entity.Airline;
 import aviasales.common.errorHandler.AirlineNotFoundException;
 import aviasales.common.repository.AirlineRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor

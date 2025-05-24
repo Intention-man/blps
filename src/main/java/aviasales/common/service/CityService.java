@@ -1,10 +1,10 @@
 package aviasales.common.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import aviasales.common.data.entity.City;
 import aviasales.common.errorHandler.CityNotFoundException;
 import aviasales.common.repository.CityRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

@@ -1,15 +1,15 @@
 package aviasales.ticket.search.mapper;
 
+import aviasales.common.data.entity.ServiceClass;
 import aviasales.common.mappers.Mapper;
+import aviasales.common.service.AirlineService;
+import aviasales.common.service.CityService;
+import aviasales.ticket.search.data.dto.SimpleTravelSearchRequestDTO;
+import aviasales.ticket.search.data.entity.Route;
+import aviasales.ticket.search.data.entity.SimpleTravelSearchRequest;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import aviasales.ticket.search.data.entity.Route;
-import aviasales.common.data.entity.ServiceClass;
-import aviasales.ticket.search.data.entity.SimpleTravelSearchRequest;
-import aviasales.ticket.search.data.dto.SimpleTravelSearchRequestDTO;
-import aviasales.common.service.AirlineService;
-import aviasales.common.service.CityService;
 
 import java.util.stream.Collectors;
 

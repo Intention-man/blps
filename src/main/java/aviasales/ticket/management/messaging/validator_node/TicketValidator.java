@@ -1,8 +1,8 @@
 package aviasales.ticket.management.messaging.validator_node;
 
-import org.springframework.stereotype.Component;
-import aviasales.common.data.entity.Ticket;
 import aviasales.common.data.dto.TicketDTO;
+import aviasales.common.data.entity.Ticket;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 

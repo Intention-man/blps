@@ -1,11 +1,11 @@
 package aviasales.ticket.search.mapper;
 
 import aviasales.common.mappers.Mapper;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
-import aviasales.ticket.search.data.entity.Route;
 import aviasales.ticket.search.data.dto.RouteDTO;
 import aviasales.ticket.search.data.dto.TravelVariantDTO;
+import aviasales.ticket.search.data.entity.Route;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;

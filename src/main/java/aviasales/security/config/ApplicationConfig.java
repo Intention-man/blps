@@ -1,5 +1,6 @@
 package aviasales.security.config;
 
+import aviasales.security.service.UserXmlService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,7 +16,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import aviasales.security.service.UserXmlService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

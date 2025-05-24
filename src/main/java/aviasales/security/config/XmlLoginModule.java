@@ -1,9 +1,9 @@
 package aviasales.security.config;
 
-import jakarta.xml.bind.JAXBException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import aviasales.security.data.User;
 import aviasales.security.service.UserXmlService;
+import jakarta.xml.bind.JAXBException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.*;

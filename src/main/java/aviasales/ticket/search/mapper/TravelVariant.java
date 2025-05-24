@@ -1,7 +1,7 @@
 package aviasales.ticket.search.mapper;
 
-import lombok.*;
 import aviasales.ticket.search.data.entity.Route;
+import lombok.*;
 
 import java.util.List;
 

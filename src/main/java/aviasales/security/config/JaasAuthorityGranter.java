@@ -1,10 +1,10 @@
 package aviasales.security.config;
 
+import aviasales.security.data.User;
+import aviasales.security.service.UserXmlService;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.jaas.AuthorityGranter;
-import aviasales.security.data.User;
-import aviasales.security.service.UserXmlService;
 
 import java.security.Principal;
 import java.util.Collections;

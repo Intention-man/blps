@@ -1,9 +1,9 @@
 package aviasales.ticket.management.messaging.api_node;
 
+import aviasales.ticket.management.messaging.dto.TicketValidationStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import aviasales.ticket.management.messaging.dto.TicketValidationStatus;
 
 import java.time.LocalDateTime;
 

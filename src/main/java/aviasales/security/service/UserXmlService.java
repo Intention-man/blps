@@ -1,12 +1,12 @@
 package aviasales.security.service;
 
+import aviasales.security.data.User;
+import aviasales.security.data.Users;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import org.springframework.stereotype.Service;
-import aviasales.security.data.User;
-import aviasales.security.data.Users;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Service
 public class UserXmlService {
-    private final String XML_FILE_PATH = "./users.xml";
 
     public List<User> loadUsers() throws JAXBException {
         try (InputStream inputStream = getClass().getResourceAsStream("/users.xml")) {
@@ -40,7 +39,7 @@ public class UserXmlService {
 
         Users usersWrapper = new Users();
         usersWrapper.setUsers(users);
-        marshaller.marshal(usersWrapper, new File(XML_FILE_PATH));
+        marshaller.marshal(usersWrapper, new File("./users.xml"));
     }
 
     public Optional<User> findByUsername(String username) throws JAXBException {

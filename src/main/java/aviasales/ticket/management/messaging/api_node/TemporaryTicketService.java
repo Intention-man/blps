@@ -1,12 +1,12 @@
 package aviasales.ticket.management.messaging.api_node;
 
+import aviasales.common.data.dto.TicketDTO;
+import aviasales.ticket.management.messaging.dto.TicketValidationStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import aviasales.common.data.dto.TicketDTO;
-import aviasales.ticket.management.messaging.dto.TicketValidationStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

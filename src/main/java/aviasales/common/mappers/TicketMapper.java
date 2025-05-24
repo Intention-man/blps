@@ -1,13 +1,13 @@
 package aviasales.common.mappers;
 
+import aviasales.common.data.dto.TicketDTO;
+import aviasales.common.data.entity.ServiceClass;
+import aviasales.common.data.entity.Ticket;
+import aviasales.common.service.AirlineService;
+import aviasales.common.service.CityService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import aviasales.common.data.entity.ServiceClass;
-import aviasales.common.data.entity.Ticket;
-import aviasales.common.data.dto.TicketDTO;
-import aviasales.common.service.AirlineService;
-import aviasales.common.service.CityService;
 
 import java.time.LocalDateTime;
 
