@@ -1,7 +1,7 @@
 spring:
   application:
     name: blps # Имя приложения, полезно для логов и управления
-    # jvm-args: -Djava.security.auth.login.config=classpath:jaas.config # Это лучше указывать при запуске JVM, здесь может не сработать надежно.
+    # jvm-args: -Djava.security.security.login.config=classpath:jaas.config # Это лучше указывать при запуске JVM, здесь может не сработать надежно.
 
   datasource: # Общие настройки БД для всех узлов
     driver-class-name: org.postgresql.Driver
@@ -28,7 +28,7 @@ spring:
         use_sql_comments: true
         default_schema: public
         # Для Atomikos и JTA:
-        # transaction.jta.platform: com.example.prac.config.AtomikosJtaPlatform # Если используешь AtomikosJtaPlatform
+        # transaction.jta.platform: config.aviasales.ticket.management.AtomikosJtaPlatform # Если используешь AtomikosJtaPlatform
     # generate-ddl: true # Часто в `validate` или `update` на проде, `create-drop` для тестов
     hibernate:
       ddl-auto: validate # или update. Для продакшена лучше validate или none и использовать Flyway/Liquibase
@@ -43,7 +43,7 @@ spring:
       enabled: true
       app-name: XmlAuth # Это имя должно совпадать с именем контекста в jaas.config
       # login-config: classpath:jaas.config # Это JVM property, лучше задавать при запуске
-      # login-module: com.example.prac.config.XmlLoginModule # Это не стандартный Spring Boot property. LoginModule указывается в jaas.config
+      # login-module: config.aviasales.ticket.management.XmlLoginModule # Это не стандартный Spring Boot property. LoginModule указывается в jaas.config
       # control-flag: REQUIRED # Тоже в jaas.config
     user:
       password:
@@ -76,5 +76,5 @@ logging: # Общие настройки логирования
           descriptor:
             sql:
               BasicBinder: TRACE # Оставляем для отладки параметров
-    com.example.prac: DEBUG # Логирование твоего приложения
+    ticket.management: DEBUG # Логирование твоего приложения
 
