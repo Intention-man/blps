@@ -1,8 +1,8 @@
 package aviasales.security.service;
 
 
-import aviasales.common.errorHandler.IncorrectAdminCode;
-import aviasales.common.errorHandler.UserAlreadyExistsException;
+import aviasales.exception.IncorrectAdminCode;
+import aviasales.exception.UserAlreadyExistsException;
 import aviasales.security.data.*;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationProvider jaasAuthenticationProvider;
-    private final UserDetailsService userDetailsService;
 
     public AuthenticationResponse register(RegisterRequest request) {
         try {

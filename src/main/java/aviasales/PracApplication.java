@@ -16,3 +16,7 @@ public class PracApplication extends SpringBootServletInitializer {
         return builder.sources(PracApplication.class);
     }
 }
+
+// TODO задачи по расписанию:
+//  1. Генерация рандомных билетов (API генерит, Validation валидирует)
+//  2. Очистка старых билетов

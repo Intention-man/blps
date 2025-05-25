@@ -1,9 +1,8 @@
 spring:
   application:
-    name: blps # Имя приложения, полезно для логов и управления
-    # jvm-args: -Djava.security.security.login.config=classpath:jaas.config # Это лучше указывать при запуске JVM, здесь может не сработать надежно.
+    name: blps
 
-  datasource: # Общие настройки БД для всех узлов
+  datasource:
     driver-class-name: org.postgresql.Driver
 
     #    local
@@ -15,9 +14,8 @@ spring:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/studs}
     username: ${SPRING_DATASOURCE_USERNAME:s367044}
     password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
-    # Если нужна XA-конфигурация для Atomikos, она будет здесь или в отдельном конфигурационном классе
 
-  jpa: # Общие настройки JPA
+  jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -27,54 +25,61 @@ spring:
         format_sql: true
         use_sql_comments: true
         default_schema: public
-        # Для Atomikos и JTA:
-        # transaction.jta.platform: config.aviasales.ticket.management.AtomikosJtaPlatform # Если используешь AtomikosJtaPlatform
-    # generate-ddl: true # Часто в `validate` или `update` на проде, `create-drop` для тестов
     hibernate:
-      ddl-auto: validate # или update. Для продакшена лучше validate или none и использовать Flyway/Liquibase
+      ddl-auto: validate
     show-sql: true
 
-  # sql: # Если используешь schema.sql/data.sql
-  #   init:
-  #     mode: always # Для разработки, для продакшена - never или embedded
-
-  security: # Общие настройки безопасности, включая JAAS
+  security:
     jaas:
       enabled: true
-      app-name: XmlAuth # Это имя должно совпадать с именем контекста в jaas.config
-      # login-config: classpath:jaas.config # Это JVM property, лучше задавать при запуске
-      # login-module: config.aviasales.ticket.management.XmlLoginModule # Это не стандартный Spring Boot property. LoginModule указывается в jaas.config
-      # control-flag: REQUIRED # Тоже в jaas.config
+      app-name: XmlAuth
     user:
       password:
-        encode: false # Оставляем, если пароли в XML не хешированы
+        encode: false
 
-  activemq: # Общие настройки ActiveMQ
-    broker-url-amqp: amqp://localhost:5672 # Для AMQP продюсера
-    broker-url: tcp://localhost:61616 # Для JMS слушателя по умолчанию (OpenWire), если он не использует кастомную AMQP фабрику
+  activemq:
+    broker-url-amqp: amqp://localhost:5672
+    broker-url: tcp://localhost:61616
     user: admin
     password: admin
-    # Можно добавить настройки пула, если используешь PooledConnectionFactory
-    # pool:
-    #   enabled: true
-    #   max-connections: 10
 
-  jms: # Общие настройки JMS
+  jms:
     listener:
-      acknowledge-mode: auto # Или client, dups_ok
-      auto-startup: true # По умолчанию слушатели запускаются. Можно переопределить в профилях.
-    # template: # Настройки для JmsTemplate по умолчанию, если он не кастомный
-    #   default-destination:
-    #   delivery-mode: persistent
+      acknowledge-mode: auto
+      auto-startup: true
 
-logging: # Общие настройки логирования
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: ClusteredScheduler
+            instanceId: AUTO
+          threadPool:
+            threadCount: 5
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreCMT
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            isClustered: true
+            tablePrefix: QRTZ_
+            txIsolationLevelSerializable: true
+
+  jta:
+    enabled: true
+    log-dir: target/atomikos
+    transaction-manager-id: myTm
+
+logging:
   level:
     org:
       hibernate:
-        SQL: WARN # Было WARN, может INFO для отладки SQL, TRACE для параметров
+        SQL: WARN
         type:
           descriptor:
             sql:
-              BasicBinder: TRACE # Оставляем для отладки параметров
-    ticket.management: DEBUG # Логирование твоего приложения
+              BasicBinder: TRACE
+    ticket.management: DEBUG
 
