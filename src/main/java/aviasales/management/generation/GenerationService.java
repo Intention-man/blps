@@ -1,16 +1,14 @@
 package aviasales.management.generation;
 
-import aviasales.data.airline.AirlineRepository;
-import aviasales.data.ticket.TicketRepository;
-import aviasales.data.city.CityService;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-
-
 import aviasales.data.airline.Airline;
+import aviasales.data.airline.AirlineRepository;
 import aviasales.data.city.City;
+import aviasales.data.city.CityService;
 import aviasales.data.ticket.ServiceClass;
 import aviasales.data.ticket.Ticket;
+import aviasales.data.ticket.TicketRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -112,7 +110,6 @@ public class GenerationService {
             otherCities.remove(departureCity);
 
             for (City arrivalCity : otherCities) {
-                // Берем случайную авиакомпанию и класс обслуживания
                 Airline airline = airlines.get(random.nextInt(airlines.size()));
                 ServiceClass serviceClass = ServiceClass.values()[random.nextInt(ServiceClass.values().length)];
 

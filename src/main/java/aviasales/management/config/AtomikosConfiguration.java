@@ -2,6 +2,7 @@ package aviasales.management.config;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
+import com.atomikos.spring.AtomikosDataSourceBean;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.UserTransaction;
@@ -56,19 +57,21 @@ public class AtomikosConfiguration {
             @Qualifier("atomikosUserTransaction") UserTransaction userTransaction,
             @Qualifier("atomikosTransactionManager") TransactionManager atomikosTransactionManager
     ) {
-        return new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+        JtaTransactionManager manager = new JtaTransactionManager(userTransaction, atomikosTransactionManager);
+        manager.setAllowCustomIsolationLevels(true);
+        return manager;
     }
 
 
     @Bean(initMethod = "init", destroyMethod = "close", name = "dataSource")
-    public com.atomikos.spring.AtomikosDataSourceBean dataSource(
+    public AtomikosDataSourceBean dataSource(
             @Value("${atomikos.xa.db.user}") String dbUser,
             @Value("${atomikos.xa.db.password}") String dbPassword,
             @Value("${atomikos.xa.db.serverName}") String dbServerName,
             @Value("${atomikos.xa.db.portNumber}") String dbPortNumber,
             @Value("${atomikos.xa.db.databaseName}") String dbDatabaseName
     ) {
-        com.atomikos.spring.AtomikosDataSourceBean dataSource = new com.atomikos.spring.AtomikosDataSourceBean();
+        AtomikosDataSourceBean dataSource = new AtomikosDataSourceBean();
         dataSource.setUniqueResourceName("postgresXa_" + System.getProperty("atomikos.tm.unique.name", "defaultTm"));
         dataSource.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
 

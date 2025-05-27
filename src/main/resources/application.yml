@@ -48,29 +48,37 @@ spring:
       acknowledge-mode: auto
       auto-startup: true
 
+
+quartz:
+  job-store-type: jdbc
+  jdbc:
+    initialize-schema: never
+  properties:
+    org:
+      quartz:
+        scheduler:
+          instanceName: ClusteredScheduler
+        threadPool:
+          threadCount: 5
+        jobStore:
+          class: org.quartz.impl.jdbcjobstore.JobStoreTX
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+          isClustered: true
+
   quartz:
-    job-store-type: jdbc
-    jdbc:
-      initialize-schema: always
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceName: ClusteredScheduler
-            instanceId: AUTO
-          threadPool:
-            threadCount: 5
-          jobStore:
-            class: org.quartz.impl.jdbcjobstore.JobStoreCMT
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-            isClustered: true
-            tablePrefix: QRTZ_
-            txIsolationLevelSerializable: true
+    datasource:
+      url: jdbc:postgresql://localhost:5432/studs
+      username: s367044
+      password: rkemWfU26OYiwbkD
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 5
 
   jta:
     enabled: true
     log-dir: target/atomikos
     transaction-manager-id: myTm
+
 
 logging:
   level:
