@@ -8,12 +8,12 @@ spring:
     listener:
       auto-startup: true
 
-atomikos: # Новые свойства для конфигурации Atomikos
+atomikos:
   log:
-    dir: ./transaction_logs/worker_node_1/ # Уникальный каталог для логов
+    dir: ./transaction_logs/worker_node_1/
   tm:
     unique:
-      name: aviasalesWorkerNode1Tm # Уникальное имя TM
+      name: aviasalesWorkerNode1Tm
   xa:
     db:
       user: s367044

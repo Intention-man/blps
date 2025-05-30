@@ -267,4 +267,8 @@ public class TicketSearchService {
         return ticketRepository.findById(id)
                 .map(ticketMapper::mapTo);
     }
+
+    public long countTickets() {
+        return ticketRepository.count();
+    }
 }
