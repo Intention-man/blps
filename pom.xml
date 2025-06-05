@@ -200,11 +200,40 @@
             <version>2.1.0</version>
         </dependency>
 
+        <!--YTSAURUS-->
         <dependency>
             <groupId>tech.ytsaurus</groupId>
             <artifactId>ytsaurus-client</artifactId>
             <version>1.2.8</version>
         </dependency>
+
+        <!--CAMUNDA-->
+        <dependency>
+            <groupId>org.camunda.bpm</groupId>
+            <artifactId>camunda-external-task-client</artifactId>
+            <version>7.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter</artifactId>
+            <version>7.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm.springboot</groupId>
+            <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+            <version>7.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.bpm</groupId>
+            <artifactId>camunda-engine-plugin-spin</artifactId>
+            <version>7.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.camunda.spin</groupId>
+            <artifactId>camunda-spin-dataformat-all</artifactId>
+            <version>7.23.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
