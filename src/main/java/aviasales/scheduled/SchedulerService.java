@@ -21,7 +21,7 @@ public class SchedulerService {
                 return;
             }
             JobDetail jobDetail = TimerUtils.buildJobDetail(jobClass);
-            Trigger trigger = TimerUtils.buildTrigger(jobClass, 60_000);
+            Trigger trigger = TimerUtils.buildTrigger(jobClass, 30_000);
             quartzScheduler.scheduleJob(jobDetail, trigger);
         } else {
             if (quartzScheduler.checkExists(jobKey)) {
