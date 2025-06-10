@@ -21,3 +21,16 @@ atomikos:
       serverName: localhost
       portNumber: "25432"
       databaseName: studs
+
+
+camunda:
+  bpm:
+    database:
+      # Worker НИКОГДА не должен трогать схему
+      schema-update: false
+    # Job Executor на Worker-узле должен быть включен
+    job-execution:
+      enabled: true
+    # Админка на worker'е не нужна
+    webapp:
+      enabled: false

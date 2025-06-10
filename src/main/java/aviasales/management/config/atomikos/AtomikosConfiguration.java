@@ -1,4 +1,4 @@
-package aviasales.management.config;
+package aviasales.management.config.atomikos;
 
 import com.atomikos.icatch.jta.UserTransactionImp;
 import com.atomikos.icatch.jta.UserTransactionManager;
@@ -23,6 +23,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.sql.DataSource;
 import java.util.Properties;
+
 
 @Configuration
 @EnableTransactionManagement
@@ -111,7 +112,7 @@ public class AtomikosConfiguration {
 
     private Properties jpaProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.transaction.jta.platform", "aviasales.management.config.AtomikosJtaPlatform");
+//        properties.put("hibernate.transaction.jta.platform", "aviasales.management.config.AtomikosJtaPlatform");
         properties.put("jakarta.persistence.transactionType", "JTA");
         properties.put("hibernate.hbm2ddl.auto", "update");
         properties.put("hibernate.temp.use_jdbc_metadata_defaults", "false");

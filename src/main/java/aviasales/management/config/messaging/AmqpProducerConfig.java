@@ -1,4 +1,4 @@
-package aviasales.management.config;
+package aviasales.management.config.messaging;
 
 
 import jakarta.jms.ConnectionFactory;

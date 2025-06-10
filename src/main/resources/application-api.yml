@@ -4,11 +4,17 @@ server:
 spring:
   application:
     name: aviasales-api-node
+  jpa:
+    hibernate:
+      # Для API-узла при первом запуске! Потом можно вернуть 'validate'.
+      ddl-auto: update
   jms:
     listener:
       auto-startup: false
 
 atomikos:
+  log-base-dir: ./transaction_logs/api_node/
+  tm-unique-name: aviasalesApiNodeTm
   log:
     dir: ./transaction_logs/api_node/
   tm:
@@ -21,3 +27,25 @@ atomikos:
       serverName: localhost
       portNumber: "25432"
       databaseName: studs
+
+
+
+#camunda:
+#  bpm:
+#    database:
+#      # API-узел отвечает за создание и обновление схемы БД
+#      schema-update: true
+#    # Job Executor на API-узле должен быть выключен
+#    job-execution:
+#      enabled: false
+#    # Включаем админку
+#    webapp:
+#      enabled: true
+#      index-redirect-enabled: true
+#    # Создаем админа и фильтр
+#    admin-user:
+#      id: admin
+#      password: admin
+#      firstName: Admin
+#    filter:
+#      create: All tasks

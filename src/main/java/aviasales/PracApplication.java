@@ -1,5 +1,6 @@
 package aviasales;
 
+import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,7 +17,3 @@ public class PracApplication extends SpringBootServletInitializer {
         return builder.sources(PracApplication.class);
     }
 }
-
-// TODO задачи по расписанию:
-//  1. Генерация рандомных билетов (API генерит, Validation валидирует)
-//  2. Очистка старых билетов

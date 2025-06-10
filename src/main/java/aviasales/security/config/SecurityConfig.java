@@ -38,7 +38,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/tickets/search/**", "/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/api/tickets/search/**", "/api/auth/**",
+                                "/camunda/**", "/api/camunda-process/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
