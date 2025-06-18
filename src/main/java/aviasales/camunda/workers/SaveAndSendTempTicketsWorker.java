@@ -3,12 +3,14 @@ package aviasales.camunda.workers;
 import aviasales.data.ticket.TicketDTO;
 import aviasales.management.addition.api_node.TicketAdditionApiNodeService;
 import aviasales.management.addition.api_node.http.TicketAdditionReqDTO;
+import lombok.AllArgsConstructor;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalTime;
@@ -18,20 +20,18 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@Profile("worker")
 @ExternalTaskSubscription(topicName = "storeAndSendTempTickets",
         variableNames = {
                 "airline", "serviceClass", "price", "availableSeats", "flightNumber",
                 "departureCity", "departureDate", "departureTime", "arrivalCity",
                 "arrivalDate", "arrivalTime", "hours", "manualVerification"
         })
+@AllArgsConstructor
 public class SaveAndSendTempTicketsWorker implements ExternalTaskHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SaveAndSendTempTicketsWorker.class);
-
     private final TicketAdditionApiNodeService ticketService;
 
-    public SaveAndSendTempTicketsWorker(TicketAdditionApiNodeService ticketService) {
-        this.ticketService = ticketService;
-    }
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {

@@ -3,6 +3,7 @@ package aviasales.camunda.workers;
 import aviasales.security.data.AuthenticationResponse;
 import aviasales.security.data.RegisterRequest;
 import aviasales.security.service.AuthenticationService;
+import lombok.AllArgsConstructor;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
@@ -18,13 +19,10 @@ import java.util.Map;
 @Component
 @Profile("worker")
 @ExternalTaskSubscription("registration_topic")
+@AllArgsConstructor
 public class RegistrationWorker implements ExternalTaskHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationWorker.class);
     private final AuthenticationService authenticationService; // или RegistrationService если есть отдельный
-
-    public RegistrationWorker(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
-    }
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
