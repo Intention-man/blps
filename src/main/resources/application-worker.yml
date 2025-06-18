@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: aviasales-worker-node-1
+    name: aviasales-worker-node
   jms:
     listener:
       auto-startup: true
@@ -25,12 +25,14 @@ atomikos:
 
 camunda:
   bpm:
-    database:
-      # Worker НИКОГДА не должен трогать схему
-      schema-update: false
-    # Job Executor на Worker-узле должен быть включен
-    job-execution:
-      enabled: true
-    # Админка на worker'е не нужна
-    webapp:
-      enabled: false
+    client:
+      async-response-timeout: 1000
+      base-url: http://localhost:8080/engine-rest
+      lock-duration: 40000
+      subscriptions:
+        login_topic:
+          variable-names: action, username, password, admin_code
+          process-definition-key: auth_process
+        registration_topic:
+          variable-names: action, username, password, admin_code
+          process-definition-key: auth_process

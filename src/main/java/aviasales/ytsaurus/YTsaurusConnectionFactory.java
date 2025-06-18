@@ -15,7 +15,7 @@ public class YTsaurusConnectionFactory {
         return new YTsaurusConnectionImpl(mcf.getEndpoint(), mcf.getToken());
     }
 
-    public void closeConnection(YTsaurusConnection connection){
+    public void closeConnection(YTsaurusConnection connection) {
         connection.close();
     }
 }

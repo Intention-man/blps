@@ -1,19 +1,11 @@
 package aviasales;
 
-import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class PracApplication extends SpringBootServletInitializer {
+public class PracApplication {
     public static void main(String[] args) {
         SpringApplication.run(PracApplication.class, args);
-    }
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(PracApplication.class);
     }
 }

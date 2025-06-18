@@ -1,7 +1,7 @@
 package aviasales.management.addition.validator_node.validation;
 
-import aviasales.data.ticket.TicketDTO;
 import aviasales.data.ticket.Ticket;
+import aviasales.data.ticket.TicketDTO;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

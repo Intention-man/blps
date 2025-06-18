@@ -5,7 +5,7 @@ spring:
   datasource:
     xa:
       driver-class-name: org.postgresql.xa.PGXADataSource
-#      url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/studs}
+      #      url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/studs}
       username: ${SPRING_DATASOURCE_USERNAME:s367044}
       password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
       serverName: localhost
@@ -76,34 +76,6 @@ quartz:
     enabled: true
     log-dir: target/atomikos
     transaction-manager-id: myTm
-
-
-camunda:
-  bpm:
-    admin-user:
-      id: admin
-      password: admin
-    database:
-      type: postgres
-      schema-update: "false"
-    transaction-manager-jta: true
-    webapp:
-      application-path: /camunda
-#      port: 8080
-    authorization:
-      enabled: true
-    job-execution:
-      enabled: true
-    metrics:
-      enabled: false
-    history-level: full
-    process-engine-name: default
-#    form:
-#      enabled: true
-#      resource-path: classpath:forms/
-#    generic-properties:
-#      properties:
-#        historyTimeToLive: P1D
 
 
 logging:

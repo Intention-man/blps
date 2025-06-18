@@ -23,6 +23,7 @@ public class YTsaurusManagedConnectionFactory implements ManagedConnectionFactor
     public Object createConnectionFactory(ConnectionManager cxManager) {
         return new YTsaurusConnectionFactory(this, cxManager);
     }
+
     @Override
     public Object createConnectionFactory() {
         return new YTsaurusConnectionFactory(this, null);
@@ -40,13 +41,21 @@ public class YTsaurusManagedConnectionFactory implements ManagedConnectionFactor
     }
 
     @Override
-    public PrintWriter getLogWriter() { return null; }
+    public PrintWriter getLogWriter() {
+        return null;
+    }
 
     @Override
-    public void setLogWriter(PrintWriter out) { }
+    public void setLogWriter(PrintWriter out) {
+    }
 
     @Override
-    public boolean equals(Object other) { return super.equals(other); }
+    public boolean equals(Object other) {
+        return super.equals(other);
+    }
+
     @Override
-    public int hashCode() { return super.hashCode(); }
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

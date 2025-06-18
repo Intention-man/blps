@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class YTsaurusManagedConnection implements ManagedConnection {
-    private YTsaurusConnectionImpl connection;
-    private List<ConnectionEventListener> listeners = new ArrayList<>();
+    private final YTsaurusConnectionImpl connection;
+    private final List<ConnectionEventListener> listeners = new ArrayList<>();
 
     public YTsaurusManagedConnection(String endpoint, String token) {
         this.connection = new YTsaurusConnectionImpl(endpoint, token);
@@ -23,16 +23,22 @@ public class YTsaurusManagedConnection implements ManagedConnection {
     }
 
     @Override
-    public void destroy() throws ResourceException {}
+    public void destroy() throws ResourceException {
+    }
+
     @Override
-    public void cleanup() throws ResourceException {}
+    public void cleanup() throws ResourceException {
+    }
+
     @Override
-    public void associateConnection(Object connection) throws ResourceException {}
+    public void associateConnection(Object connection) throws ResourceException {
+    }
 
     @Override
     public void addConnectionEventListener(ConnectionEventListener listener) {
         listeners.add(listener);
     }
+
     @Override
     public void removeConnectionEventListener(ConnectionEventListener listener) {
         listeners.remove(listener);
@@ -49,9 +55,16 @@ public class YTsaurusManagedConnection implements ManagedConnection {
     }
 
     @Override
-    public ManagedConnectionMetaData getMetaData() { return null; }
+    public ManagedConnectionMetaData getMetaData() {
+        return null;
+    }
+
     @Override
-    public void setLogWriter(PrintWriter out) {}
+    public PrintWriter getLogWriter() {
+        return null;
+    }
+
     @Override
-    public PrintWriter getLogWriter() { return null; }
+    public void setLogWriter(PrintWriter out) {
+    }
 }

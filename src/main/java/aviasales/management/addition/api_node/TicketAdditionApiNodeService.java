@@ -1,7 +1,10 @@
 package aviasales.management.addition.api_node;
 
 import aviasales.data.city.CityService;
-import aviasales.data.ticket.*;
+import aviasales.data.ticket.Ticket;
+import aviasales.data.ticket.TicketDTO;
+import aviasales.data.ticket.TicketMapper;
+import aviasales.data.ticket.TicketRepository;
 import aviasales.management.addition.api_node.http.TicketAdditionReqDTO;
 import aviasales.management.addition.api_node.temp.storage.TemporaryTicketService;
 import aviasales.management.addition.messaging.*;
