@@ -9,3 +9,7 @@ public class PracApplication {
         SpringApplication.run(PracApplication.class, args);
     }
 }
+
+// TODO поиск билетов
+// TODO задачи по расписанию
+// TODO не пускать дальше при ошибке регистрации/авторизации

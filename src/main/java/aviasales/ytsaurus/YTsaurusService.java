@@ -13,13 +13,13 @@ public class YTsaurusService {
     private final YTsaurusConnectionFactory yTsaurusConnectionFactory;
     private final TicketSearchService ticketSearchService;
 
-    public void addStatistics() throws Exception {
+    public void addStatistics() {
         YTsaurusConnection connection = null;
         try {
             connection = yTsaurusConnectionFactory.getConnection();
             connection.addStatisticRow(timestampNowToLong(), ticketSearchService.countTickets());
         } catch (Exception e) {
-            throw e;
+            System.err.println(e.getMessage());
         } finally {
             assert connection != null;
             yTsaurusConnectionFactory.closeConnection(connection);

@@ -13,7 +13,7 @@ public class YTsaurusController {
     private final YTsaurusService service;
 
     @PostMapping("/add")
-    public void addStatistics() throws Exception {
+    public void addStatistics(){
         service.addStatistics();
     }
 }
