@@ -23,4 +23,17 @@ public class City {
     public City(String cityName) {
         this.name = cityName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City that = (City) o;
+        return cityId != null && cityId.equals(that.cityId);
+    }
+
+    @Override
+    public int hashCode() {
+        return cityId != null ? cityId.hashCode() : 0;
+    }
 }

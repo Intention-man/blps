@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Profile("worker")
 @ExternalTaskSubscription("addStatistics")
 @AllArgsConstructor
-public class AddStatisticsTopic implements ExternalTaskHandler {
+public class AddStatisticsTopicWorker implements ExternalTaskHandler {
     private final YTsaurusService ytService;
 
     @Override

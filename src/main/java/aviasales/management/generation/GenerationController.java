@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/tickets/editor-api")
+@RequestMapping("/api/tickets/generation")
 @AllArgsConstructor
 public class GenerationController {
     private final GenerationService generationService;

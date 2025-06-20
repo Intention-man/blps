@@ -13,6 +13,7 @@ spring:
       auto-startup: false
 
 atomikos:
+  properties.default-jta-timeout: 300
   log-base-dir: ./transaction_logs/api_node/
   tm-unique-name: aviasalesApiNodeTm
   log:

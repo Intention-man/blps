@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "text": "=variants",
+      "type": "text",
+      "layout": {
+        "row": "Row_0bebqh2",
+        "columns": null
+      },
+      "id": "Field_10s1cmx",
+      "properties": {}
+    }
+  ],
+  "type": "default",
+  "id": "search_result",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

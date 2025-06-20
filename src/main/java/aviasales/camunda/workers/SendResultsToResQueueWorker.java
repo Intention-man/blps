@@ -21,7 +21,6 @@ import java.util.Collections;
 public class SendResultsToResQueueWorker implements ExternalTaskHandler {
     private final TicketAdditionValidateNodeService validateNodeService;
 
-
     @Override
     public void execute(ExternalTask task, ExternalTaskService service) {
         try {

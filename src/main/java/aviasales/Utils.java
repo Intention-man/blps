@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Utils {
     public static <T> List<T> sublistByPageAndLimit(List<T> list, int page, int limit) {
-        int toIndex = Math.max(Math.min((page + 1) * limit, list.size()) - 1, 0);
+        int toIndex = Math.max(Math.min((page + 1) * limit, list.size()), 0);
         int fromIndex = Math.max(0, toIndex + 1 - limit);
         return list.subList(fromIndex, toIndex);
     }

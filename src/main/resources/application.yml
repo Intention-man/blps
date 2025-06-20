@@ -9,7 +9,7 @@ spring:
       username: ${SPRING_DATASOURCE_USERNAME:s367044}
       password: ${SPRING_DATASOURCE_PASSWORD:rkemWfU26OYiwbkD}
       serverName: localhost
-      portNumber: 5432 # Вы используете порт 5432 в основном конфиге. Убедитесь, что он правильный.
+      portNumber: 25432 # Вы используете порт 5432 в основном конфиге. Убедитесь, что он правильный.
       databaseName: studs
 
   jpa:
@@ -17,7 +17,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         transaction.jta.platform: org.hibernate.engine.transaction.jta.platform.internal.AtomikosJtaPlatform
+        order_inserts: true
+        order_updates: true
+        generate_statistics: true
         jdbc:
+          batch_size: 50
           lob:
             non_contextual_creation: true
         format_sql: true
@@ -65,7 +69,7 @@ quartz:
 
   quartz:
     datasource:
-      url: jdbc:postgresql://localhost:5432/studs
+      url: jdbc:postgresql://localhost:25432/studs
       username: s367044
       password: rkemWfU26OYiwbkD
       driver-class-name: org.postgresql.Driver
@@ -83,9 +87,9 @@ logging:
     org:
       hibernate:
         SQL: WARN
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
+        type.descriptor.sql.BasicBinder: TRACE
+#        engine.jdbc:
+#          env.internal.LobCreationLogging: DEBUG
+#          connections.internal.ConnectionProviderInitiator: DEBUG
     ticket.management: DEBUG
 

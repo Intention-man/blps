@@ -79,6 +79,11 @@ public class TicketSearchService {
     }
 
     public SearchResponseDTO searchSimpleRoutes(SimpleTravelSearchRequestDTO simpleReqDTO, boolean needBackTickets, int page, int limit) {
+        System.out.println("tickets count = " + ticketRepository.count());
+        System.out.println(simpleReqDTO);
+        System.out.println(needBackTickets);
+        System.out.println(page);
+        System.out.println(limit);
         List<TravelVariant> variants = new ArrayList<>();
         SimpleTravelSearchRequest req = simpleReqMapper.mapFrom(simpleReqDTO);
         List<Route> routes = new ArrayList<>();
@@ -105,26 +110,54 @@ public class TicketSearchService {
     }
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req, List<Route> simpleRouteVariants) {
+        System.out.println("---- Вызван репозиторий findFirstTickets ----");
+        System.out.println("serviceClass: " + req.getServiceClass() + " (" + (req.getServiceClass()==null ? null : req.getServiceClass().getClass()) + ")");
+        System.out.println("passengerCount: " + req.getPassengerCount());
+        System.out.println("maxPrice: " + req.getMaxPrice());
+        System.out.println("maxTravelTime: " + req.getMaxTravelTime());
+        System.out.println("availableAirlines: " + req.getAvailableAirlines());
+        if (req.getAvailableAirlines() != null) {
+            for (Object el : req.getAvailableAirlines()) {
+                System.out.println(" > " + el + " (" + (el==null ? null : el.getClass()) + ")");
+            }
+        }
+        System.out.println("departureCity: " + req.getDepartureCity() + " (" + (req.getDepartureCity()==null ? null : req.getDepartureCity().getClass()) + ")");
+        System.out.println("departureDateStart: " + req.getDepartureDateStart() + " (" + (req.getDepartureDateStart()==null ? null : req.getDepartureDateStart().getClass()) + ")");
+        System.out.println("departureTimeStart: " + req.getDepartureTimeStart() + " (" + (req.getDepartureTimeStart()==null ? null : req.getDepartureTimeStart().getClass()) + ")");
+        System.out.println("departureDateFinish: " + req.getDepartureDateFinish() + " (" + (req.getDepartureDateFinish()==null ? null : req.getDepartureDateFinish().getClass()) + ")");
+        System.out.println("departureTimeFinish: " + req.getDepartureTimeFinish() + " (" + (req.getDepartureTimeFinish()==null ? null : req.getDepartureTimeFinish().getClass()) + ")");
+        System.out.println("arrivalCity: " + req.getArrivalCity() + " (" + (req.getArrivalCity()==null ? null : req.getArrivalCity().getClass()) + ")");
+        System.out.println("numberOfTransfers: " + req.getNumberOfTransfers());
+        System.out.println("arrivalDateStart: " + req.getArrivalDateStart());
+        System.out.println("arrivalDateFinish: " + req.getArrivalDateFinish());
+        System.out.println("arrivalTimeStart: " + req.getArrivalTimeStart());
+        System.out.println("arrivalTimeFinish: " + req.getArrivalTimeFinish());
+
         List<Ticket> firstTicketCandidates = ticketRepository.findFirstTickets(
                 req.getServiceClass(), req.getPassengerCount(), req.getMaxPrice(), req.getMaxTravelTime(), req.getAvailableAirlines(),
                 req.getDepartureCity(), req.getDepartureDateStart(), req.getDepartureDateFinish(),
                 req.getDepartureTimeStart(), req.getDepartureTimeFinish());
+        System.out.println("firstTicketCandidates: " + firstTicketCandidates);
 
         for (Ticket ticket : firstTicketCandidates) {
-            if (ticket.getArrivalCity().equals(req.getArrivalCity())) {
+            if (ticket.getArrivalCity().getName().equals(req.getArrivalCity().getName())) {
                 if (isSuitableFinishTicket(ticket, req)) {
                     Route route = initRouteWithFirstTicket(ticket, req);
+                    System.out.println("Add route: " + route.getTickets().stream().map(Ticket::getFlightNumber).toList());
                     simpleRouteVariants.add(route);
                 }
             } else if (canTicketBeIncludeInRoute(ticket, req)) {
                 Route route = initRouteWithFirstTicket(ticket, req);
+                System.out.println("Add route: " + route.getTickets().stream().map(Ticket::getFlightNumber).toList());
                 findNextTicketCandidates(req, route, req.getNumberOfTransfers() - 1, simpleRouteVariants);
             }
+            System.out.println("simpleRouteVariants: " + simpleRouteVariants);
         }
     }
 
     private void findNextTicketCandidates(SimpleTravelSearchRequest req, Route route, int leftNumberOfTransfers,
                                           List<Route> simpleRouteVariants) {
+        System.out.println("findNextTicketCandidates");
         if (leftNumberOfTransfers == 0)
             return;
 
@@ -169,7 +202,7 @@ public class TicketSearchService {
                     route.getMaxFinishDatetime());
 
             for (Ticket ticket : nextTicketCandidates) {
-                if (ticket.getArrivalCity().equals(req.getArrivalCity())) {
+                if (ticket.getArrivalCity().getName().equals(req.getArrivalCity().getName())) {
                     if (isSuitableFinishTicket(ticket, req)) {
                         Route updatedRoute = cloneRouteAddingTicket(route, ticket);
                         simpleRouteVariants.add(updatedRoute);

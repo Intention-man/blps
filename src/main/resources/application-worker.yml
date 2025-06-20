@@ -9,30 +9,18 @@ spring:
       auto-startup: true
 
 atomikos:
-  log:
-    dir: ./transaction_logs/worker_node_1/
-  tm:
-    unique:
-      name: aviasalesWorkerNode1Tm
-  xa:
-    db:
-      user: s367044
-      password: rkemWfU26OYiwbkD
-      serverName: localhost
-      portNumber: "25432"
-      databaseName: studs
+  properties.default-jta-timeout: 300
+  log.dir: ./transaction_logs/worker_node_1/
+  tm.unique.name: aviasalesWorkerNode1Tm
+  xa.db:
+    user: s367044
+    password: rkemWfU26OYiwbkD
+    serverName: localhost
+    portNumber: "25432"
+    databaseName: studs
 
 
-camunda:
-  bpm:
-    client:
-      async-response-timeout: 1000
-      base-url: http://localhost:8080/engine-rest
-      lock-duration: 40000
-      subscriptions:
-        login_topic:
-          variable-names: action, username, password, admin_code
-          process-definition-key: auth_process
-        registration_topic:
-          variable-names: action, username, password, admin_code
-          process-definition-key: auth_process
+camunda.bpm.client:
+    async-response-timeout: 1000
+    base-url: http://localhost:8080/engine-rest
+    lock-duration: 60000
