@@ -111,22 +111,22 @@ public class TicketSearchService {
 
     private void findAndSetSimpleRouteVariants(SimpleTravelSearchRequest req, List<Route> simpleRouteVariants) {
         System.out.println("---- Вызван репозиторий findFirstTickets ----");
-        System.out.println("serviceClass: " + req.getServiceClass() + " (" + (req.getServiceClass()==null ? null : req.getServiceClass().getClass()) + ")");
+        System.out.println("serviceClass: " + req.getServiceClass() + " (" + (req.getServiceClass() == null ? null : req.getServiceClass().getClass()) + ")");
         System.out.println("passengerCount: " + req.getPassengerCount());
         System.out.println("maxPrice: " + req.getMaxPrice());
         System.out.println("maxTravelTime: " + req.getMaxTravelTime());
         System.out.println("availableAirlines: " + req.getAvailableAirlines());
         if (req.getAvailableAirlines() != null) {
             for (Object el : req.getAvailableAirlines()) {
-                System.out.println(" > " + el + " (" + (el==null ? null : el.getClass()) + ")");
+                System.out.println(" > " + el + " (" + (el == null ? null : el.getClass()) + ")");
             }
         }
-        System.out.println("departureCity: " + req.getDepartureCity() + " (" + (req.getDepartureCity()==null ? null : req.getDepartureCity().getClass()) + ")");
-        System.out.println("departureDateStart: " + req.getDepartureDateStart() + " (" + (req.getDepartureDateStart()==null ? null : req.getDepartureDateStart().getClass()) + ")");
-        System.out.println("departureTimeStart: " + req.getDepartureTimeStart() + " (" + (req.getDepartureTimeStart()==null ? null : req.getDepartureTimeStart().getClass()) + ")");
-        System.out.println("departureDateFinish: " + req.getDepartureDateFinish() + " (" + (req.getDepartureDateFinish()==null ? null : req.getDepartureDateFinish().getClass()) + ")");
-        System.out.println("departureTimeFinish: " + req.getDepartureTimeFinish() + " (" + (req.getDepartureTimeFinish()==null ? null : req.getDepartureTimeFinish().getClass()) + ")");
-        System.out.println("arrivalCity: " + req.getArrivalCity() + " (" + (req.getArrivalCity()==null ? null : req.getArrivalCity().getClass()) + ")");
+        System.out.println("departureCity: " + req.getDepartureCity() + " (" + (req.getDepartureCity() == null ? null : req.getDepartureCity().getClass()) + ")");
+        System.out.println("departureDateStart: " + req.getDepartureDateStart() + " (" + (req.getDepartureDateStart() == null ? null : req.getDepartureDateStart().getClass()) + ")");
+        System.out.println("departureTimeStart: " + req.getDepartureTimeStart() + " (" + (req.getDepartureTimeStart() == null ? null : req.getDepartureTimeStart().getClass()) + ")");
+        System.out.println("departureDateFinish: " + req.getDepartureDateFinish() + " (" + (req.getDepartureDateFinish() == null ? null : req.getDepartureDateFinish().getClass()) + ")");
+        System.out.println("departureTimeFinish: " + req.getDepartureTimeFinish() + " (" + (req.getDepartureTimeFinish() == null ? null : req.getDepartureTimeFinish().getClass()) + ")");
+        System.out.println("arrivalCity: " + req.getArrivalCity() + " (" + (req.getArrivalCity() == null ? null : req.getArrivalCity().getClass()) + ")");
         System.out.println("numberOfTransfers: " + req.getNumberOfTransfers());
         System.out.println("arrivalDateStart: " + req.getArrivalDateStart());
         System.out.println("arrivalDateFinish: " + req.getArrivalDateFinish());

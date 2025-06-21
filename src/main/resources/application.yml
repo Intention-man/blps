@@ -88,8 +88,8 @@ logging:
       hibernate:
         SQL: WARN
         type.descriptor.sql.BasicBinder: TRACE
-#        engine.jdbc:
-#          env.internal.LobCreationLogging: DEBUG
-#          connections.internal.ConnectionProviderInitiator: DEBUG
+    #        engine.jdbc:
+    #          env.internal.LobCreationLogging: DEBUG
+    #          connections.internal.ConnectionProviderInitiator: DEBUG
     ticket.management: DEBUG
 

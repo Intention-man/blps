@@ -24,5 +24,6 @@ public class CleanupTicketsWorker implements ExternalTaskHandler {
     @Transactional
     public void execute(ExternalTask task, ExternalTaskService service) {
         ticketRepository.deleteByArrivalDateBefore(LocalDate.now());
+        service.complete(task);
     }
 }

@@ -5,15 +5,14 @@ import aviasales.search.data.dto.SimpleTravelSearchRequestDTO;
 import aviasales.search.service.DateTimeService;
 import aviasales.search.service.TicketSearchService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
+import org.camunda.bpm.engine.variable.Variables;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.camunda.bpm.engine.variable.Variables;
 
 import java.util.Arrays;
 import java.util.HashMap;

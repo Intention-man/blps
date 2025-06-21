@@ -1,5 +1,7 @@
 package aviasales.camunda.workers;
 
+import aviasales.exception.IncorrectAdminCode;
+import aviasales.exception.UserAlreadyExistsException;
 import aviasales.security.data.AuthenticationResponse;
 import aviasales.security.data.RegisterRequest;
 import aviasales.security.service.AuthenticationService;
@@ -22,48 +24,50 @@ import java.util.Map;
 @AllArgsConstructor
 public class RegistrationWorker implements ExternalTaskHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationWorker.class);
-    private final AuthenticationService authenticationService; // или RegistrationService если есть отдельный
+    private final AuthenticationService authenticationService;
 
     @Override
     public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
-        LOGGER.info("Registration worker started for task: {}", externalTask.getId());
-
         String username = externalTask.getVariable("username");
         String password = externalTask.getVariable("password");
         String adminCode = externalTask.getVariable("admin_code");
 
         try {
-            RegisterRequest regRequest = RegisterRequest.builder()
-                    .username(username)
-                    .password(password)
-                    .adminCode(adminCode)
-                    .build();
-
+            RegisterRequest regRequest = RegisterRequest.builder().username(username).password(password).adminCode(adminCode).build();
             AuthenticationResponse response = authenticationService.register(regRequest);
 
             Map<String, Object> variables = new HashMap<>();
             variables.put("authToken", response.getToken());
             variables.put("userRole", response.getRole().name());
-            variables.put("resultMessage", String.format("Регистрация успешна! Добро пожаловать, %s!", username));
-            variables.put("userInfo", String.format("Новый пользователь: %s\nРоль: %s", username, response.getRole().name()));
-            variables.put("success", true);
+            variables.put("auth_ok", "true");
 
             externalTaskService.complete(externalTask, variables);
             LOGGER.info("User {} registered successfully.", username);
 
-        } catch (Exception e) {
-            LOGGER.error("Registration failed for user {}: {}", username, e.getMessage());
+        } catch (UserAlreadyExistsException e) {
+            LOGGER.warn("Registration failed: user {} already exists.", username);
 
-            Map<String, Object> errorVariables = new HashMap<>();
-            errorVariables.put("errorMessage", "Ошибка регистрации: " + e.getMessage());
-            errorVariables.put("errorDetails", "Пользователь уже существует или неверный код администратора");
-            errorVariables.put("success", false);
+            Map<String, Object> errorVars = new HashMap<>();
+            errorVars.put("errorMessage", e.getMessage());
+            errorVars.put("auth_ok", "false");
 
             externalTaskService.handleBpmnError(
-                    externalTask,
-                    "REGISTRATION_FAILED",
-                    "Ошибка регистрации: " + e.getMessage(),
-                    errorVariables
+                    externalTask, "USER_ALREADY_EXISTS_ERROR", e.getMessage(), errorVars
+            );
+        } catch (IncorrectAdminCode e) {
+            LOGGER.warn("Registration failed for user {}: incorrect admin code.", username);
+
+            Map<String, Object> errorVars = new HashMap<>();
+            errorVars.put("errorMessage", e.getMessage());
+            errorVars.put("auth_ok", "false");
+
+            externalTaskService.handleBpmnError(
+                    externalTask, "INVALID_ADMIN_CODE_ERROR", e.getMessage(), errorVars
+            );
+        } catch (Exception e) {
+            LOGGER.error("Technical failure during registration for user {}: {}", username, e.getMessage(), e);
+            externalTaskService.handleFailure(
+                    externalTask, "Техническая ошибка регистрации", e.getMessage(), 0, 5000L
             );
         }
     }

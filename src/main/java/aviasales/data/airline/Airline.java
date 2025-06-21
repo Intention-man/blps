@@ -1,6 +1,5 @@
 package aviasales.data.airline;
 
-import aviasales.data.city.City;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -22,5 +22,6 @@ public class GenerateTicketsWorker implements ExternalTaskHandler {
     @Override
     public void execute(ExternalTask task, ExternalTaskService service) {
         generationService.generateAndSaveLimitedTickets(LocalDate.now().plusDays(1));
+        service.complete(task);
     }
 }
